@@ -19,8 +19,72 @@
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Custom animation delays */
+.animation-delay-150 {
+  animation-delay: 150ms;
+}
+
+.animation-delay-300 {
+  animation-delay: 300ms;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(100, 116, 139, 0.5);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(100, 116, 139, 0.8);
+}
+
+/* Ad blocker styles */
+iframe {
+  position: relative;
+  z-index: 1;
+}
+
+/* Prevent iframe ads */
+iframe[src*="ads"],
+iframe[src*="ad."],
+iframe[src*="banner"],
+iframe[src*="pop"],
+iframe[id*="ads"],
+iframe[id*="ad-"],
+iframe[class*="ads"],
+iframe[class*="ad-"] {
+  display: none !important;
+}
+
+/* Fullscreen styles */
+:fullscreen {
+  background: black;
+}
+
+/* Gradient text animation */
+@keyframes gradient-text {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.animate-gradient-text {
+  background-size: 200% auto;
+  animation: gradient-text 5s ease infinite;
 }

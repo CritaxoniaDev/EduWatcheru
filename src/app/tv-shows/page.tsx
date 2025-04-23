@@ -6,15 +6,15 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
 // Categories we'll display
-const CATEGORIES = [
-  { title: "Popular Movies", endpoint: "/movie/popular" },
-  { title: "Top Rated Movies", endpoint: "/movie/top_rated" },
-  { title: "Now Playing", endpoint: "/movie/now_playing" },
-  { title: "Upcoming Movies", endpoint: "/movie/upcoming" }
+const TV_CATEGORIES = [
+  { title: "Popular TV Shows", endpoint: "/tv/popular" },
+  { title: "Top Rated TV Shows", endpoint: "/tv/top_rated" },
+  { title: "Currently Airing", endpoint: "/tv/on_the_air" },
+  { title: "Airing Today", endpoint: "/tv/airing_today" }
 ];
 
-export default function Home() {
-  const [movieCategories, setMovieCategories] = useState<{ title: string; movies: Movie[] }[]>([]);
+export default function TVShowsPage() {
+  const [tvCategories, setTvCategories] = useState<{ title: string; movies: Movie[] }[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -31,12 +31,12 @@ export default function Home() {
   const config = getSecureConfig();
 
   useEffect(() => {
-    const fetchMovieCategories = async () => {
+    const fetchTVCategories = async () => {
       try {
         setLoading(true);
         
         const categoriesData = await Promise.all(
-          CATEGORIES.map(async (category) => {
+          TV_CATEGORIES.map(async (category) => {
             const response = await fetch(
               `${config.b}${category.endpoint}?api_key=${config.k}&language=en-US&page=1`
             );
@@ -46,41 +46,53 @@ export default function Home() {
             }
             
             const data = await response.json();
+            
+            // Format TV show data to match our Movie interface
+            const formattedShows = data.results.map((show: any) => ({
+              id: show.id,
+              title: show.name,
+              poster_path: show.poster_path,
+              overview: show.overview,
+              vote_average: show.vote_average,
+              first_air_date: show.first_air_date,
+              media_type: "tv"
+            }));
+            
             return {
               title: category.title,
-              movies: data.results.slice(0, 6) // Limit to 6 movies per category
+              movies: formattedShows.slice(0, 6) // Limit to 6 shows per category
             };
           })
         );
         
-        setMovieCategories(categoriesData);
+        setTvCategories(categoriesData);
       } catch (err) {
-        console.error("Error fetching movies:", err);
-        setError("Failed to load movies. Please try again later.");
+        console.error("Error fetching TV shows:", err);
+        setError("Failed to load TV shows. Please try again later.");
       } finally {
         setLoading(false);
       }
     };
 
-    fetchMovieCategories();
+    fetchTVCategories();
   }, []);
 
-  // Function to get movie details including IMDB ID
-  const getMovieDetails = async (movieId: number) => {
+  // Function to get TV show details including IMDB ID
+  const getTVShowDetails = async (showId: number) => {
     try {
       const response = await fetch(
-        `${config.b}/movie/${movieId}?api_key=${config.k}&append_to_response=external_ids`
+        `${config.b}/tv/${showId}?api_key=${config.k}&append_to_response=external_ids`
       );
       
       if (!response.ok) {
-        throw new Error("Failed to fetch movie details");
+        throw new Error("Failed to fetch TV show details");
       }
       
       const data = await response.json();
-      return data.imdb_id || `${movieId}`;
+      return data.external_ids?.imdb_id || `${showId}`;
     } catch (err) {
-      console.error("Error fetching movie details:", err);
-      return `${movieId}`;
+      console.error("Error fetching TV show details:", err);
+      return `${showId}`;
     }
   };
 
@@ -99,19 +111,19 @@ export default function Home() {
           </div>
         ) : (
           <div className="space-y-12">
-            {movieCategories.map((category, index) => (
+            {tvCategories.map((category, index) => (
               <section key={index}>
                 <div className="flex justify-between items-center mb-6">
                   <h2 className="text-2xl font-bold">{category.title}</h2>
                   <a href="#" className="text-blue-400 hover:underline text-sm">View All</a>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
-                  {category.movies.map((movie) => (
+                  {category.movies.map((show) => (
                     <MovieCard 
-                      key={movie.id} 
-                      movie={movie} 
+                      key={show.id} 
+                      movie={show} 
                       imageBaseUrl={config.i}
-                      getMovieDetails={getMovieDetails}
+                      getMovieDetails={getTVShowDetails}
                     />
                   ))}
                 </div>

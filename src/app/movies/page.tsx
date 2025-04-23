@@ -6,14 +6,14 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
 // Categories we'll display
-const CATEGORIES = [
+const MOVIE_CATEGORIES = [
   { title: "Popular Movies", endpoint: "/movie/popular" },
   { title: "Top Rated Movies", endpoint: "/movie/top_rated" },
   { title: "Now Playing", endpoint: "/movie/now_playing" },
   { title: "Upcoming Movies", endpoint: "/movie/upcoming" }
 ];
 
-export default function Home() {
+export default function MoviesPage() {
   const [movieCategories, setMovieCategories] = useState<{ title: string; movies: Movie[] }[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -36,7 +36,7 @@ export default function Home() {
         setLoading(true);
         
         const categoriesData = await Promise.all(
-          CATEGORIES.map(async (category) => {
+          MOVIE_CATEGORIES.map(async (category) => {
             const response = await fetch(
               `${config.b}${category.endpoint}?api_key=${config.k}&language=en-US&page=1`
             );
@@ -46,9 +46,16 @@ export default function Home() {
             }
             
             const data = await response.json();
+            
+            // Add media_type to each movie
+            const formattedMovies = data.results.map((movie: any) => ({
+              ...movie,
+              media_type: "movie"
+            }));
+            
             return {
               title: category.title,
-              movies: data.results.slice(0, 6) // Limit to 6 movies per category
+              movies: formattedMovies.slice(0, 6) // Limit to 6 movies per category
             };
           })
         );
