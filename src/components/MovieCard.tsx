@@ -8,6 +8,7 @@ import { motion } from "framer-motion";
 // Types for our movie data
 // Update the Movie interface to handle both movies and TV shows
 export interface Movie {
+    backdrop_path: any;
     id: number;
     title: string;
     name?: string; // For TV shows
@@ -47,12 +48,22 @@ export default function MovieCard({ movie, imageBaseUrl, getMovieDetails }: Movi
         setLoading(false);
     };
 
-    // Instead of the external URL construction:
+    // Updated to direct to different pages based on media type
+    // For TV shows, we'll include season and episode parameters (default to season 1, episode 1)
     const getWatchUrl = (id: string | null): string => {
         if (!id) return "";
-        return `/watch/${id}`; // Direct to internal watch page
+        
+        if (mediaType === "tv") {
+            // For TV shows, direct to the TV watch page with season 1, episode 1 as default
+            return `/watch/tv/${id}`;
+        } else {
+            // For movies, direct to the movie watch page
+            return `/watch/movie/${id}`;
+        }
     };
 
+    // Get the title (works for both movies and TV shows)
+    const title = movie.title || movie.name || "Unknown Title";
 
     // Truncate overview text
     const truncatedOverview = movie.overview && movie.overview.length > 120
@@ -79,7 +90,7 @@ export default function MovieCard({ movie, imageBaseUrl, getMovieDetails }: Movi
                     <>
                         <Image
                             src={`${imageBaseUrl}${movie.poster_path}`}
-                            alt={movie.title}
+                            alt={title}
                             fill
                             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                             className="object-cover transition-transform duration-500 group-hover:scale-110"
@@ -108,8 +119,8 @@ export default function MovieCard({ movie, imageBaseUrl, getMovieDetails }: Movi
             </div>
 
             <div className="p-4 flex-grow flex flex-col">
-                <h3 className="font-bold text-lg truncate mb-1" title={movie.title}>
-                    {movie.title}
+                <h3 className="font-bold text-lg truncate mb-1" title={title}>
+                    {title}
                 </h3>
 
                 <div className="flex justify-between items-center mt-1 mb-4">
@@ -132,20 +143,20 @@ export default function MovieCard({ movie, imageBaseUrl, getMovieDetails }: Movi
                     {imdbId ? (
                         <Link
                             href={getWatchUrl(imdbId)}
-                            className="block w-full bg-red-600 text-white text-center py-2 rounded-md hover:bg-red-700 transition-colors font-medium"
+                            className={`block w-full text-white text-center py-2 rounded-md transition-colors font-medium ${mediaType === "tv" ? "bg-purple-600 hover:bg-purple-700" : "bg-red-600 hover:bg-red-700"}`}
                         >
                             <span className="flex items-center justify-center">
                                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
                                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" />
                                 </svg>
-                                Watch Now
+                                Watch {mediaType === "tv" ? "Episode" : "Now"}
                             </span>
                         </Link>
                     ) : (
                         <button
                             onClick={handleWatchClick}
                             disabled={loading}
-                            className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition-colors disabled:bg-blue-800 font-medium"
+                            className={`w-full text-white py-2 rounded-md transition-colors font-medium ${mediaType === "tv" ? "bg-purple-600 hover:bg-purple-700 disabled:bg-purple-800" : "bg-blue-600 hover:bg-blue-700 disabled:bg-blue-800"}`}
                         >
                             {loading ? (
                                 <span className="flex items-center justify-center">

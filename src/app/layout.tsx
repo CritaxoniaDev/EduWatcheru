@@ -19,6 +19,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  icons: {
+    icon: '/eduwatcheru-logo.svg',
+  },
   title: "EduWatcheru - Movie Streaming Platform",
   description: "Watch your favorite movies online",
 };
