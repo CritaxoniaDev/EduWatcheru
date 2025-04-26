@@ -77,8 +77,8 @@ function generateClassName() {
   return 'tw-' + result;
 }
 
-// Classes to exclude from obfuscation
-const excludePattern = /^(html|body|dark)$/;
+// Classes to exclude from obfuscation - expanded to preserve functionality
+const excludePattern = /^(html|body|dark|fixed|sticky|absolute|relative|static|block|inline|flex|grid|hidden|visible|invisible|opacity|z-|overflow|transition|transform|translate|scale|rotate|skew|origin|delay|duration|ease|animate|cursor|pointer|select|resize|scroll|snap|touch|user|break|truncate|text-(xs|sm|base|lg|xl|2xl|3xl|4xl|5xl|6xl|7xl|8xl|9xl)|font-(thin|extralight|light|normal|medium|semibold|bold|extrabold|black)|tracking|leading|list|placeholder|bg-(transparent|current|black|white|slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)|from-|via-|to-|border|divide|rounded|shadow|outline|ring|blur|brightness|contrast|drop|grayscale|hue|invert|saturate|sepia|backdrop|sr-only).*$/;
 
 // Process HTML files
 function processHtmlFiles() {
@@ -109,7 +109,13 @@ function processHtmlFiles() {
         const obfuscatedClasses = classes.map(className => {
           if (!className) return '';
           
+          // Skip excluded classes - these are important for functionality
           if (excludePattern.test(className)) {
+            return className;
+          }
+          
+          // Skip classes that contain dynamic values (like w-[50px])
+          if (className.includes('[') && className.includes(']')) {
             return className;
           }
           
@@ -149,8 +155,12 @@ function processCssFiles() {
     let replacementsInFile = 0;
     
     Object.entries(classMap).forEach(([original, obfuscated]) => {
+      // Skip processing if the original class is empty or very short (likely a utility)
+      if (!original || original.length < 2) return;
+      
       const escapedOriginal = original.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
       
+      // More precise pattern to avoid partial matches
       const pattern = new RegExp(`\\.${escapedOriginal}(\\s|:|,|\\{|\\[|\\]|$)`, 'g');
       
       const newContent = content.replace(pattern, (match, ending) => {
@@ -182,23 +192,33 @@ function processJsFiles() {
   
   let totalReplacements = 0;
   
+  // Skip files that are critical for functionality
+  const skipFiles = [
+    'Header', 'search', 'tv-shows', 'movies', 'watch'
+  ];
+  
   jsFiles.forEach(file => {
+    // Skip processing files that match our critical components
+    if (skipFiles.some(skipFile => file.includes(skipFile))) {
+      console.log(`Skipping critical file: ${file}`);
+      return;
+    }
+    
     let content = fs.readFileSync(file, 'utf8');
     let replacementsInFile = 0;
     
     Object.entries(classMap).forEach(([original, obfuscated]) => {
+      // Skip processing if the original class is empty or very short (likely a utility)
+      if (!original || original.length < 3) return;
+      
       const escapedOriginal = original.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
       
+      // More precise patterns to avoid breaking functionality
       const patterns = [
         new RegExp(`"${escapedOriginal}"`, 'g'),
         new RegExp(`'${escapedOriginal}'`, 'g'),
         new RegExp(`className:\\s*["']${escapedOriginal}["']`, 'g'),
-        new RegExp(`className:\\s*\`${escapedOriginal}\``, 'g'),
-        new RegExp(`"${escapedOriginal}\\s`, 'g'),
-        new RegExp(`'${escapedOriginal}\\s`, 'g'),
-        new RegExp(`\\s${escapedOriginal}\\s`, 'g'),
-        new RegExp(`\\s${escapedOriginal}"`, 'g'),
-        new RegExp(`\\s${escapedOriginal}'`, 'g')
+        new RegExp(`className:\\s*\`${escapedOriginal}\``, 'g')
       ];
       
       patterns.forEach(pattern => {
