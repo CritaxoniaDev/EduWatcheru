@@ -6,6 +6,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Image from "next/image";
 import Link from "next/link";
+import "./page.css";
 
 // Categories we'll display
 const CATEGORIES = [

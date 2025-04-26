@@ -23,7 +23,7 @@ const nextConfig: NextConfig = {
           },
           {
             key: 'Content-Security-Policy',
-            value: "frame-ancestors 'self' https://vidsrc.to https://*.vidsrc.to;",
+            value: "frame-ancestors 'self' https://vidsrc.to https://*.vidsrc.to https://vidsrc.xyz https://*.vidsrc.xyz;",
           },
         ],
       },
