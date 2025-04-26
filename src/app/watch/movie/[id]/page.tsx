@@ -29,28 +29,26 @@ export default function WatchPage() {
   const [fullscreen, setFullscreen] = useState(false);
   const [showInfo, setShowInfo] = useState(true);
   const playerRef = useRef<HTMLDivElement>(null);
-  
+
   // Get the movie ID from the URL params
   const id = params.id as string;
-  
+
   // Obfuscated URL construction
   const getEmbedUrl = (id: string): string => {
     if (!id) return "";
-    
+
     // Obfuscated URL parts
-    const _0x4e8d = ['e', 'mb', 'vi', 'to', 'ds', 'rc', '.', '/', 'ed', 'mo', 'vi', 'e'];
+    const _0x4e8d = ['v', 'id', 's', 'rc', '.', 'x', 'y', 'z', '/', 'e', 'm', 'b', 'ed', 'movie'];
     const _0x3f7a = (arr: string[]) => arr.join('');
-    
+
     // Construct base URL in an obfuscated way
     const _0x2c9b = _0x3f7a([
-      _0x4e8d[2], _0x4e8d[4], _0x4e8d[5], _0x4e8d[6], 
-      _0x4e8d[3], _0x4e8d[7], _0x4e8d[0], _0x4e8d[1], 
-      _0x4e8d[8], _0x4e8d[7], _0x4e8d[9], _0x4e8d[10], 
-      _0x4e8d[0], _0x4e8d[7]
+      _0x4e8d[0], _0x4e8d[1], _0x4e8d[2], _0x4e8d[3],
+      _0x4e8d[4], _0x4e8d[5], _0x4e8d[6], _0x4e8d[7]
     ]);
-    
+
     // Return the complete URL
-    return `https://${_0x2c9b}${id}`;
+    return `https://${_0x2c9b}/${_0x4e8d[12]}/${_0x4e8d[13]}/${id}`;
   };
 
   const embedUrl = getEmbedUrl(id);
@@ -76,24 +74,24 @@ export default function WatchPage() {
         // Decode the API key
         const _0x2f1a = ['NTJmZjQ2OWFhN2IyYzhiYjNlZjBkMmI3NzQ4NTE2MGY'];
         const apiKey = atob(_0x2f1a[0]);
-        
+
         // Determine if this is an IMDB ID or TMDB ID
         const isImdbId = id.startsWith('tt');
-        
+
         let movieId;
-        
+
         // If it's an IMDB ID, we need to get the TMDB ID first
         if (isImdbId) {
           const findResponse = await fetch(
             `https://api.themoviedb.org/3/find/${id}?api_key=${apiKey}&external_source=imdb_id`
           );
-          
+
           if (!findResponse.ok) {
             throw new Error("Failed to find movie by IMDB ID");
           }
-          
+
           const findData = await findResponse.json();
-          
+
           if (findData.movie_results && findData.movie_results.length > 0) {
             movieId = findData.movie_results[0].id;
           } else {
@@ -102,16 +100,16 @@ export default function WatchPage() {
         } else {
           movieId = id;
         }
-        
+
         // Now get the full movie details with the TMDB ID
         const detailsResponse = await fetch(
           `https://api.themoviedb.org/3/movie/${movieId}?api_key=${apiKey}&append_to_response=credits,similar,videos`
         );
-        
+
         if (!detailsResponse.ok) {
           throw new Error("Failed to fetch movie details");
         }
-        
+
         const detailsData = await detailsResponse.json();
         setMovieDetails(detailsData);
 
@@ -183,15 +181,15 @@ export default function WatchPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 to-black text-white flex flex-col">
       {/* Header with glass effect */}
-      <motion.header 
+      <motion.header
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.5 }}
         className="py-4 px-6 bg-black/60 backdrop-blur-md flex items-center justify-between sticky top-0 z-50 border-b border-gray-800/50"
       >
         <div className="flex items-center">
-          <button 
-            onClick={() => router.back()} 
+          <button
+            onClick={() => router.back()}
             className="mr-4 text-gray-400 hover:text-white transition-colors group"
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 transform group-hover:-translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -204,7 +202,7 @@ export default function WatchPage() {
             </span>
           </Link>
         </div>
-        
+
         <h1 className="text-lg font-medium truncate max-w-md">
           {loading ? (
             <div className="h-6 w-40 bg-gray-700 animate-pulse rounded"></div>
@@ -212,9 +210,9 @@ export default function WatchPage() {
             movieDetails?.title
           )}
         </h1>
-        
+
         <div className="flex items-center space-x-3">
-          <button 
+          <button
             onClick={toggleInfo}
             className="text-gray-400 hover:text-white transition-colors p-2 rounded-full hover:bg-white/10"
             title={showInfo ? "Hide Info" : "Show Info"}
@@ -223,7 +221,7 @@ export default function WatchPage() {
               <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2h-1V9a1 1 0 00-1-1z" clipRule="evenodd" />
             </svg>
           </button>
-          <button 
+          <button
             onClick={toggleFullscreen}
             className="text-gray-400 hover:text-white transition-colors p-2 rounded-full hover:bg-white/10"
             title={fullscreen ? "Exit Fullscreen" : "Enter Fullscreen"}
@@ -246,7 +244,7 @@ export default function WatchPage() {
         {movieDetails?.backdrop_path && (
           <div className="absolute inset-0 z-0">
             <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black"></div>
-            <motion.div 
+            <motion.div
               initial={{ scale: 1.1, opacity: 0 }}
               animate={{ scale: 1, opacity: 0.3 }}
               transition={{ duration: 1 }}
@@ -263,11 +261,11 @@ export default function WatchPage() {
             </motion.div>
           </div>
         )}
-        
+
         {/* Loading overlay */}
         <AnimatePresence>
           {loading && (
-            <motion.div 
+            <motion.div
               initial={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.5 }}
@@ -284,11 +282,11 @@ export default function WatchPage() {
             </motion.div>
           )}
         </AnimatePresence>
-        
+
         {/* Movie info section with animation */}
         <AnimatePresence>
           {movieDetails && showInfo && (
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
@@ -298,7 +296,7 @@ export default function WatchPage() {
               <div className="flex flex-col md:flex-row gap-8 mb-8">
                 {/* Movie poster with hover effect */}
                 {movieDetails.poster_path && (
-                  <motion.div 
+                  <motion.div
                     className="w-full md:w-1/4 lg:w-1/5"
                     whileHover={{ scale: 1.03 }}
                     transition={{ duration: 0.3 }}
@@ -315,10 +313,10 @@ export default function WatchPage() {
                     </div>
                   </motion.div>
                 )}
-                
+
                 {/* Movie details with animations */}
                 <div className="w-full md:w-3/4 lg:w-4/5">
-                  <motion.h1 
+                  <motion.h1
                     initial={{ opacity: 0, y: -20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, delay: 0.2 }}
@@ -326,9 +324,9 @@ export default function WatchPage() {
                   >
                     {movieDetails.title}
                   </motion.h1>
-                  
+
                   {movieDetails.tagline && (
-                    <motion.p 
+                    <motion.p
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       transition={{ duration: 0.5, delay: 0.3 }}
@@ -337,8 +335,8 @@ export default function WatchPage() {
                       "{movieDetails.tagline}"
                     </motion.p>
                   )}
-                  
-                  <motion.div 
+
+                  <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ duration: 0.5, delay: 0.4 }}
@@ -352,7 +350,7 @@ export default function WatchPage() {
                         {formatDate(movieDetails.release_date)}
                       </span>
                     )}
-                    
+
                     {movieDetails.runtime > 0 && (
                       <span className="text-gray-300 bg-gray-800/50 backdrop-blur-sm px-3 py-1 rounded-full text-sm flex items-center">
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -361,7 +359,7 @@ export default function WatchPage() {
                         {formatRuntime(movieDetails.runtime)}
                       </span>
                     )}
-                    
+
                     {movieDetails.vote_average > 0 && (
                       <span className="flex items-center bg-yellow-500/20 backdrop-blur-sm px-3 py-1 rounded-full text-sm">
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1 text-yellow-500" viewBox="0 0 20 20" fill="currentColor">
@@ -372,17 +370,17 @@ export default function WatchPage() {
                       </span>
                     )}
                   </motion.div>
-                  
+
                   {movieDetails.genres && movieDetails.genres.length > 0 && (
-                    <motion.div 
+                    <motion.div
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       transition={{ duration: 0.5, delay: 0.5 }}
                       className="flex flex-wrap gap-2 mb-6"
                     >
                       {movieDetails.genres.map((genre, index) => (
-                        <motion.span 
-                          key={genre.id} 
+                        <motion.span
+                          key={genre.id}
                           initial={{ opacity: 0, scale: 0.8 }}
                           animate={{ opacity: 1, scale: 1 }}
                           transition={{ duration: 0.3, delay: 0.5 + (index * 0.1) }}
@@ -393,8 +391,8 @@ export default function WatchPage() {
                       ))}
                     </motion.div>
                   )}
-                  
-                  <motion.p 
+
+                  <motion.p
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ duration: 0.5, delay: 0.6 }}
@@ -402,10 +400,10 @@ export default function WatchPage() {
                   >
                     {movieDetails.overview || "No description available for this movie."}
                   </motion.p>
-                  
+
                   {/* Production companies */}
                   {movieDetails.production_companies && movieDetails.production_companies.length > 0 && (
-                    <motion.div 
+                    <motion.div
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       transition={{ duration: 0.5, delay: 0.7 }}
@@ -435,8 +433,8 @@ export default function WatchPage() {
                       </div>
                     </motion.div>
                   )}
-                  
-                  <motion.button 
+
+                  <motion.button
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, delay: 0.8 }}
@@ -453,9 +451,9 @@ export default function WatchPage() {
             </motion.div>
           )}
         </AnimatePresence>
-        
+
         {/* Video player section with enhanced UI */}
-        <div 
+        <div
           id="movie-player"
           ref={playerRef}
           className="w-full aspect-video bg-black relative mt-auto"
@@ -465,7 +463,7 @@ export default function WatchPage() {
           {/* Player loading overlay */}
           <AnimatePresence>
             {playerLoading && (
-              <motion.div 
+              <motion.div
                 initial={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.5 }}
@@ -478,10 +476,10 @@ export default function WatchPage() {
               </motion.div>
             )}
           </AnimatePresence>
-          
+
           {/* Ad blocker */}
           <div className="absolute inset-0 pointer-events-none z-[5]"></div>
-          
+
           {/* The iframe */}
           <iframe
             src={embedUrl}
@@ -491,7 +489,7 @@ export default function WatchPage() {
             style={{ backgroundColor: "#000" }}
           ></iframe>
         </div>
-        
+
         {/* Ad blocker notification */}
         <div className="bg-gradient-to-r from-blue-900/50 to-purple-900/50 backdrop-blur-md p-4 text-center">
           <p className="text-sm text-blue-200">
