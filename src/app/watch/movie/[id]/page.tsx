@@ -33,9 +33,8 @@ export default function WatchPage() {
   // Get the movie ID from the URL params
   const id = params.id as string;
 
-  // Obfuscated URL construction
   const getEmbedUrl = (id: string): string => {
-    if (!id) return "";
+    if (!id) return "javascript:void(0)";
 
     // Obfuscated URL parts
     const _0x4e8d = ['v', 'id', 's', 'rc', '.', 'x', 'y', 'z', '/', 'e', 'm', 'b', 'ed', 'movie'];
@@ -47,11 +46,28 @@ export default function WatchPage() {
       _0x4e8d[4], _0x4e8d[5], _0x4e8d[6], _0x4e8d[7]
     ]);
 
-    // Return the complete URL
-    return `https://${_0x2c9b}/${_0x4e8d[12]}/${_0x4e8d[13]}/${id}`;
+    // Create the actual URL with "embed" instead of "ed"
+    const actualUrl = `https://${_0x2c9b}/embed/${_0x4e8d[13]}/${id}`;
+
+    // Return the actual URL
+    return actualUrl;
   };
 
   const embedUrl = getEmbedUrl(id);
+
+  const iframeRef = useRef<HTMLIFrameElement>(null);
+
+  // Use an effect to set the iframe src after component mounts
+  useEffect(() => {
+    if (iframeRef.current) {
+      // Small delay to ensure it's not easily traceable
+      setTimeout(() => {
+        if (iframeRef.current) {
+          iframeRef.current.src = embedUrl;
+        }
+      }, 100);
+    }
+  }, [embedUrl]);
 
   // Format runtime from minutes to hours and minutes
   const formatRuntime = (minutes: number): string => {
@@ -482,11 +498,12 @@ export default function WatchPage() {
 
           {/* The iframe */}
           <iframe
-            src={embedUrl}
+            ref={iframeRef}
             className="w-full h-full"
             allowFullScreen
             onLoad={handleIframeLoad}
             style={{ backgroundColor: "#000" }}
+          // src is intentionally omitted here and set via JavaScript
           ></iframe>
         </div>
 

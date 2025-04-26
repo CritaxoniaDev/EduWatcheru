@@ -69,11 +69,26 @@ export default function TVWatchPage() {
       _0x4e8d[4], _0x4e8d[5], _0x4e8d[6], _0x4e8d[7]
     ]);
 
-    // Return the complete URL with season and episode parameters
-    return `https://${_0x2c9b}/${_0x4e8d[12]}/${_0x4e8d[13]}/${id}/${season}/${episode}`;
+    // Create the actual URL with "embed" instead of "ed"
+    return `https://${_0x2c9b}/embed/${_0x4e8d[13]}/${id}/${season}/${episode}`;
   };
 
+  // Then modify the component to include:
+  const iframeRef = useRef<HTMLIFrameElement>(null);
+
   const embedUrl = getEmbedUrl(id, selectedSeason, selectedEpisode);
+
+  // Use an effect to set the iframe src after component mounts
+  useEffect(() => {
+    if (iframeRef.current) {
+      // Small delay to ensure it's not easily traceable
+      setTimeout(() => {
+        if (iframeRef.current) {
+          iframeRef.current.src = embedUrl;
+        }
+      }, 100);
+    }
+  }, [embedUrl]);
 
   // Format runtime from minutes to hours and minutes
   const formatRuntime = (minutes: number): string => {
@@ -612,8 +627,8 @@ export default function TVWatchPage() {
                             key={season.id}
                             onClick={() => handleSeasonChange(season.season_number)}
                             className={`px-4 py-2 rounded-lg whitespace-nowrap transition-all ${selectedSeason === season.season_number
-                                ? 'bg-purple-600 text-white font-medium'
-                                : 'bg-gray-800/70 text-gray-300 hover:bg-gray-700/70'
+                              ? 'bg-purple-600 text-white font-medium'
+                              : 'bg-gray-800/70 text-gray-300 hover:bg-gray-700/70'
                               }`}
                           >
                             Season {season.season_number}
@@ -646,8 +661,8 @@ export default function TVWatchPage() {
                           transition={{ duration: 0.2 }}
                           onClick={() => handleEpisodeChange(episode.episode_number)}
                           className={`cursor-pointer rounded-lg overflow-hidden border ${selectedEpisode === episode.episode_number
-                              ? 'border-purple-500 bg-purple-900/30'
-                              : 'border-gray-800 bg-gray-800/50 hover:bg-gray-700/50'
+                            ? 'border-purple-500 bg-purple-900/30'
+                            : 'border-gray-800 bg-gray-800/50 hover:bg-gray-700/50'
                             }`}
                         >
                           <div className="relative h-24 bg-gray-900">
@@ -724,11 +739,12 @@ export default function TVWatchPage() {
 
           {/* The iframe */}
           <iframe
-            src={embedUrl}
+            ref={iframeRef}
             className="w-full h-full"
             allowFullScreen
             onLoad={handleIframeLoad}
             style={{ backgroundColor: "#000" }}
+          // src is intentionally omitted here and set via JavaScript
           ></iframe>
 
           {/* Custom player controls */}
