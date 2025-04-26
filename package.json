@@ -25,6 +25,7 @@
     "cssnano": "^7.0.6",
     "glob": "^11.0.2",
     "postcss-class-name-shortener": "^2.0.0",
+    "postcss-rename": "^0.6.1",
     "tailwindcss": "^4",
     "typescript": "^5"
   }
