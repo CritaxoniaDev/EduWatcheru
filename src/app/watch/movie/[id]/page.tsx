@@ -195,13 +195,13 @@ export default function WatchPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-black text-white flex flex-col">
+    <div className="min-h-screen bg-[#0f0f13] text-white flex flex-col">
       {/* Header with glass effect */}
       <motion.header
         initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.5 }}
-        className="py-4 px-6 bg-black/60 backdrop-blur-md flex items-center justify-between sticky top-0 z-50 border-b border-gray-800/50"
+        className="py-3 px-6 bg-[#0f0f13]/90 backdrop-blur-md flex items-center justify-between sticky top-0 z-50 border-b border-[#2a2a3a]/30"
       >
         <div className="flex items-center">
           <button
@@ -213,7 +213,7 @@ export default function WatchPage() {
             </svg>
           </button>
           <Link href="/" className="text-xl font-bold">
-            <span className="bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 bg-clip-text text-transparent">
               EduWatcheru
             </span>
           </Link>
@@ -221,7 +221,7 @@ export default function WatchPage() {
 
         <h1 className="text-lg font-medium truncate max-w-md">
           {loading ? (
-            <div className="h-6 w-40 bg-gray-700 animate-pulse rounded"></div>
+            <div className="h-6 w-40 bg-[#2a2a3a] animate-pulse rounded"></div>
           ) : (
             movieDetails?.title
           )}
@@ -230,7 +230,7 @@ export default function WatchPage() {
         <div className="flex items-center space-x-3">
           <button
             onClick={toggleInfo}
-            className="text-gray-400 hover:text-white transition-colors p-2 rounded-full hover:bg-white/10"
+            className="text-gray-400 hover:text-white transition-colors p-2 rounded-full hover:bg-[#2a2a3a]/40"
             title={showInfo ? "Hide Info" : "Show Info"}
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
@@ -239,7 +239,7 @@ export default function WatchPage() {
           </button>
           <button
             onClick={toggleFullscreen}
-            className="text-gray-400 hover:text-white transition-colors p-2 rounded-full hover:bg-white/10"
+            className="text-gray-400 hover:text-white transition-colors p-2 rounded-full hover:bg-[#2a2a3a]/40"
             title={fullscreen ? "Exit Fullscreen" : "Enter Fullscreen"}
           >
             {fullscreen ? (
@@ -259,7 +259,7 @@ export default function WatchPage() {
         {/* Movie backdrop with parallax effect */}
         {movieDetails?.backdrop_path && (
           <div className="absolute inset-0 z-0">
-            <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black"></div>
+            <div className="absolute inset-0 bg-gradient-to-b from-[#0f0f13]/80 via-[#0f0f13]/70 to-[#0f0f13]"></div>
             <motion.div
               initial={{ scale: 1.1, opacity: 0 }}
               animate={{ scale: 1, opacity: 0.3 }}
@@ -285,11 +285,11 @@ export default function WatchPage() {
               initial={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.5 }}
-              className="absolute inset-0 flex items-center justify-center bg-black z-10"
+              className="absolute inset-0 flex items-center justify-center bg-[#0f0f13] z-10"
             >
               <div className="flex flex-col items-center">
                 <div className="relative w-24 h-24">
-                  <div className="absolute inset-0 rounded-full border-t-2 border-b-2 border-blue-500 animate-spin"></div>
+                  <div className="absolute inset-0 rounded-full border-t-2 border-b-2 border-indigo-500 animate-spin"></div>
                   <div className="absolute inset-2 rounded-full border-r-2 border-l-2 border-purple-500 animate-spin animation-delay-150"></div>
                   <div className="absolute inset-4 rounded-full border-t-2 border-b-2 border-pink-500 animate-spin animation-delay-300"></div>
                 </div>
@@ -317,7 +317,7 @@ export default function WatchPage() {
                     whileHover={{ scale: 1.03 }}
                     transition={{ duration: 0.3 }}
                   >
-                    <div className="relative aspect-[2/3] rounded-xl overflow-hidden shadow-[0_0_30px_rgba(0,0,0,0.8)] ring-1 ring-white/10">
+                    <div className="relative aspect-[2/3] rounded-2xl overflow-hidden shadow-[0_0_30px_rgba(79,70,229,0.2)] ring-1 ring-indigo-500/20">
                       <Image
                         src={`https://image.tmdb.org/t/p/w500${movieDetails.poster_path}`}
                         alt={movieDetails.title}
@@ -336,7 +336,7 @@ export default function WatchPage() {
                     initial={{ opacity: 0, y: -20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, delay: 0.2 }}
-                    className="text-4xl font-bold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-white to-gray-300"
+                    className="text-4xl font-bold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-white to-indigo-200"
                   >
                     {movieDetails.title}
                   </motion.h1>
@@ -346,7 +346,7 @@ export default function WatchPage() {
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       transition={{ duration: 0.5, delay: 0.3 }}
-                      className="text-gray-400 italic mb-4"
+                      className="text-indigo-300 italic mb-4"
                     >
                       "{movieDetails.tagline}"
                     </motion.p>
@@ -359,7 +359,7 @@ export default function WatchPage() {
                     className="flex flex-wrap items-center gap-4 mb-6"
                   >
                     {movieDetails.release_date && (
-                      <span className="text-gray-300 bg-gray-800/50 backdrop-blur-sm px-3 py-1 rounded-full text-sm flex items-center">
+                      <span className="text-gray-300 bg-[#2a2a3a]/50 backdrop-blur-sm px-3 py-1 rounded-full text-sm flex items-center">
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                         </svg>
@@ -368,7 +368,7 @@ export default function WatchPage() {
                     )}
 
                     {movieDetails.runtime > 0 && (
-                      <span className="text-gray-300 bg-gray-800/50 backdrop-blur-sm px-3 py-1 rounded-full text-sm flex items-center">
+                      <span className="text-gray-300 bg-[#2a2a3a]/50 backdrop-blur-sm px-3 py-1 rounded-full text-sm flex items-center">
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
@@ -377,11 +377,11 @@ export default function WatchPage() {
                     )}
 
                     {movieDetails.vote_average > 0 && (
-                      <span className="flex items-center bg-yellow-500/20 backdrop-blur-sm px-3 py-1 rounded-full text-sm">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1 text-yellow-500" viewBox="0 0 20 20" fill="currentColor">
+                      <span className="flex items-center bg-indigo-500/20 backdrop-blur-sm px-3 py-1 rounded-full text-sm">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1 text-indigo-400" viewBox="0 0 20 20" fill="currentColor">
                           <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                         </svg>
-                        <span className="text-yellow-500 font-semibold">{movieDetails.vote_average.toFixed(1)}</span>
+                        <span className="text-indigo-400 font-semibold">{movieDetails.vote_average.toFixed(1)}</span>
                         <span className="text-gray-300 ml-1">/10</span>
                       </span>
                     )}
@@ -400,7 +400,7 @@ export default function WatchPage() {
                           initial={{ opacity: 0, scale: 0.8 }}
                           animate={{ opacity: 1, scale: 1 }}
                           transition={{ duration: 0.3, delay: 0.5 + (index * 0.1) }}
-                          className="px-3 py-1 bg-gradient-to-r from-blue-600/30 to-purple-600/30 backdrop-blur-sm rounded-full text-sm border border-blue-500/20"
+                          className="px-3 py-1 bg-gradient-to-r from-indigo-600/20 to-purple-600/20 backdrop-blur-sm rounded-full text-sm border border-indigo-500/20"
                         >
                           {genre.name}
                         </motion.span>
@@ -425,11 +425,11 @@ export default function WatchPage() {
                       transition={{ duration: 0.5, delay: 0.7 }}
                       className="mb-8"
                     >
-                      <h3 className="text-sm uppercase tracking-wider text-gray-400 mb-3">Production</h3>
+                      <h3 className="text-sm uppercase tracking-wider text-indigo-400 mb-3">Production</h3>
                       <div className="flex flex-wrap gap-6">
                         {movieDetails.production_companies.slice(0, 4).map((company) => (
                           company.logo_path ? (
-                            <div key={company.id} className="h-12 bg-white/10 backdrop-blur-sm rounded-lg px-3 py-2 flex items-center">
+                            <div key={company.id} className="h-12 bg-[#2a2a3a]/30 backdrop-blur-sm rounded-lg px-3 py-2 flex items-center border border-indigo-500/10">
                               <div className="relative h-8 w-16">
                                 <Image
                                   src={`https://image.tmdb.org/t/p/w200${company.logo_path}`}
@@ -441,7 +441,7 @@ export default function WatchPage() {
                               </div>
                             </div>
                           ) : (
-                            <div key={company.id} className="h-12 bg-white/10 backdrop-blur-sm rounded-lg px-4 flex items-center">
+                            <div key={company.id} className="h-12 bg-[#2a2a3a]/30 backdrop-blur-sm rounded-lg px-4 flex items-center border border-indigo-500/10">
                               <span className="text-sm text-gray-300">{company.name}</span>
                             </div>
                           )
@@ -455,7 +455,7 @@ export default function WatchPage() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, delay: 0.8 }}
                     onClick={scrollToPlayer}
-                    className="bg-gradient-to-r from-red-600 to-pink-600 hover:from-red-700 hover:to-pink-700 text-white px-8 py-4 rounded-xl font-medium transition-all duration-300 flex items-center shadow-lg shadow-red-600/20 hover:shadow-red-600/40"
+                    className="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white px-8 py-4 rounded-xl font-medium transition-all duration-300 flex items-center shadow-lg shadow-indigo-600/20 hover:shadow-indigo-600/40"
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-2" viewBox="0 0 20 20" fill="currentColor">
                       <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" />
@@ -472,7 +472,7 @@ export default function WatchPage() {
         <div
           id="movie-player"
           ref={playerRef}
-          className="w-full aspect-video bg-black relative mt-auto"
+          className="w-full aspect-video bg-black relative mt-auto rounded-t-xl overflow-hidden"
           onMouseEnter={() => setShowControls(true)}
           onMouseLeave={() => setShowControls(false)}
         >
@@ -483,11 +483,11 @@ export default function WatchPage() {
                 initial={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.5 }}
-                className="absolute inset-0 flex items-center justify-center bg-black z-10"
+                className="absolute inset-0 flex items-center justify-center bg-[#0f0f13] z-10"
               >
                 <div className="flex flex-col items-center">
-                  <div className="w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mb-4"></div>
-                  <p className="text-blue-400">Loading player...</p>
+                  <div className="w-16 h-16 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin mb-4"></div>
+                  <p className="text-indigo-400">Loading player...</p>
                 </div>
               </motion.div>
             )}
@@ -508,20 +508,20 @@ export default function WatchPage() {
         </div>
 
         {/* Ad blocker notification */}
-        <div className="bg-gradient-to-r from-blue-900/50 to-purple-900/50 backdrop-blur-md p-4 text-center">
-          <p className="text-sm text-blue-200">
+        <div className="bg-gradient-to-r from-indigo-900/50 to-purple-900/50 backdrop-blur-md p-4 text-center">
+          <p className="text-sm text-indigo-200">
             <span className="font-semibold">✓ Ad-Free Experience Enabled</span> - Enjoy your movie without interruptions!
           </p>
         </div>
       </main>
 
-      <footer className="py-4 px-6 bg-black/80 backdrop-blur-md text-center text-gray-400 text-sm border-t border-gray-800/30">
+      <footer className="py-4 px-6 bg-[#0f0f13]/90 backdrop-blur-md text-center text-gray-400 text-sm border-t border-[#2a2a3a]/30">
         <div className="container mx-auto flex flex-col md:flex-row justify-between items-center">
-          <p>© {new Date().getFullYear()} EduWatcheru. For educational purposes only.</p>
+          <p>© {new Date().getFullYear()} EduWatcheru.</p>
           <div className="flex items-center space-x-4 mt-2 md:mt-0">
-            <span className="text-xs px-2 py-1 bg-blue-900/30 rounded-full">Ad-Free</span>
-            <span className="text-xs px-2 py-1 bg-green-900/30 rounded-full">HD Quality</span>
-            <span className="text-xs px-2 py-1 bg-purple-900/30 rounded-full">No Sign-up</span>
+            <span className="text-xs px-2 py-1 bg-indigo-900/30 rounded-full border border-indigo-500/10">Ad-Free</span>
+            <span className="text-xs px-2 py-1 bg-purple-900/30 rounded-full border border-indigo-500/10">HD Quality</span>
+            <span className="text-xs px-2 py-1 bg-pink-900/30 rounded-full border border-indigo-500/10">No Sign-up</span>
           </div>
         </div>
       </footer>

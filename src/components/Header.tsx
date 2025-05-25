@@ -204,17 +204,6 @@ export default function Header() {
               </svg>
             </motion.button>
             
-            {/* User Menu (simplified) */}
-            <div className="hidden sm:block">
-              <motion.button
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.95 }}
-                className="flex items-center space-x-2 p-1 px-3 rounded-full bg-gradient-to-r from-blue-600/80 to-purple-600/80 hover:from-blue-600 hover:to-purple-600 text-white text-sm transition-all"
-              >
-                <span>Sign In</span>
-              </motion.button>
-            </div>
-            
             {/* Mobile Menu Button */}
             <motion.button
               whileTap={{ scale: 0.95 }}
@@ -356,11 +345,6 @@ export default function Header() {
                   </Link>
                 </li>
               ))}
-              <li className="pt-2 border-t border-gray-800">
-                <button className="w-full py-3 mt-2 rounded-lg bg-gradient-to-r from-blue-600 to-purple-600 text-white font-medium">
-                  Sign In
-                </button>
-              </li>
             </ul>
           </nav>
         </motion.div>
