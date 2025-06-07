@@ -52,6 +52,10 @@ export default function TVWatchPage() {
   const [selectedEpisode, setSelectedEpisode] = useState(1);
   const [episodes, setEpisodes] = useState<Episode[]>([]);
   const playerRef = useRef<HTMLDivElement>(null);
+  const [isPlaying, setIsPlaying] = useState(true);
+  const [volume, setVolume] = useState(100);
+  const [isMuted, setIsMuted] = useState(false);
+  const [showVolumeSlider, setShowVolumeSlider] = useState(false);
 
   // Get the TV show ID from the URL params
   const id = params.id as string;
@@ -72,6 +76,56 @@ export default function TVWatchPage() {
 
     // Create the actual URL with "embed" instead of "ed"
     return `https://${_0x2c9b}/embed/${_0x4e8d[13]}/${id}/${season}/${episode}`;
+  };
+
+  // Add these handler functions before the return statement
+  const togglePlayPause = () => {
+    // Note: This won't work with cross-origin iframes
+    // But we can track the state for UI purposes
+    setIsPlaying(!isPlaying);
+
+    // Attempt to send message to iframe (if the embedded player supports it)
+    if (iframeRef.current?.contentWindow) {
+      try {
+        iframeRef.current.contentWindow.postMessage({
+          action: isPlaying ? 'pause' : 'play'
+        }, '*');
+      } catch (error) {
+        console.log('Cannot control iframe player directly');
+      }
+    }
+  };
+
+  const handleVolumeChange = (newVolume: number) => {
+    setVolume(newVolume);
+
+    // Attempt to send volume message to iframe
+    if (iframeRef.current?.contentWindow) {
+      try {
+        iframeRef.current.contentWindow.postMessage({
+          action: 'volume',
+          volume: newVolume / 100
+        }, '*');
+      } catch (error) {
+        console.log('Cannot control iframe volume directly');
+      }
+    }
+  };
+
+  const toggleMute = () => {
+    setIsMuted(!isMuted);
+
+    // Attempt to send mute message to iframe
+    if (iframeRef.current?.contentWindow) {
+      try {
+        iframeRef.current.contentWindow.postMessage({
+          action: 'mute',
+          muted: !isMuted
+        }, '*');
+      } catch (error) {
+        console.log('Cannot control iframe mute directly');
+      }
+    }
   };
 
   // Then modify the component to include:
@@ -649,57 +703,169 @@ export default function TVWatchPage() {
                       animate={{ opacity: 1 }}
                       exit={{ opacity: 0 }}
                       transition={{ duration: 0.2 }}
-                      className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4 flex items-center justify-between z-20"
+                      className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 to-transparent p-4 z-20"
                     >
-                      <div className="flex items-center space-x-4">
-                        <span className="text-sm font-medium bg-purple-900/70 px-2 py-1 rounded">
-                          S{selectedSeason}:E{selectedEpisode}
-                        </span>
-                        <span className="text-sm hidden sm:inline">
-                          {episodes.find(ep => ep.episode_number === selectedEpisode)?.name || "Episode"}
-                        </span>
+                      {/* Main controls row */}
+                      <div className="flex items-center justify-between mb-3">
+                        <div className="flex items-center space-x-4">
+                          <span className="text-sm font-medium bg-purple-900/70 px-2 py-1 rounded">
+                            S{selectedSeason}:E{selectedEpisode}
+                          </span>
+                          <span className="text-sm hidden sm:inline">
+                            {episodes.find(ep => ep.episode_number === selectedEpisode)?.name || "Episode"}
+                          </span>
+                        </div>
+
+                        <div className="flex items-center space-x-3">
+                          {/* Episode navigation */}
+                          {selectedEpisode > 1 && (
+                            <button
+                              onClick={() => handleEpisodeChange(selectedEpisode - 1)}
+                              className="text-white hover:text-purple-400 transition-colors p-1"
+                              title="Previous Episode"
+                            >
+                              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                              </svg>
+                            </button>
+                          )}
+
+                          {episodes.length > 0 && selectedEpisode < episodes.length && (
+                            <button
+                              onClick={() => handleEpisodeChange(selectedEpisode + 1)}
+                              className="text-white hover:text-purple-400 transition-colors p-1"
+                              title="Next Episode"
+                            >
+                              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                              </svg>
+                            </button>
+                          )}
+
+                          <button
+                            onClick={toggleFullscreen}
+                            className="text-white hover:text-purple-400 transition-colors p-1"
+                            title={fullscreen ? "Exit Fullscreen" : "Enter Fullscreen"}
+                          >
+                            {fullscreen ? (
+                              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                              </svg>
+                            ) : (
+                              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5v-4m0 4h-4m4 0l-5-5" />
+                              </svg>
+                            )}
+                          </button>
+                        </div>
                       </div>
 
-                      <div className="flex items-center space-x-3">
-                        {selectedEpisode > 1 && (
+                      {/* Playback controls row */}
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center space-x-4">
+                          {/* Play/Pause button */}
                           <button
-                            onClick={() => handleEpisodeChange(selectedEpisode - 1)}
-                            className="text-white hover:text-purple-400 transition-colors"
-                            title="Previous Episode"
+                            onClick={togglePlayPause}
+                            className="text-white hover:text-purple-400 transition-colors p-2 hover:bg-white/10 rounded-full"
+                            title={isPlaying ? "Pause" : "Play"}
                           >
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                            {isPlaying ? (
+                              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                              </svg>
+                            ) : (
+                              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1.586a1 1 0 01.707.293l2.414 2.414a1 1 0 00.707.293H15M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                              </svg>
+                            )}
+                          </button>
+
+                          {/* Volume controls */}
+                          <div
+                            className="flex items-center space-x-2 relative"
+                            onMouseEnter={() => setShowVolumeSlider(true)}
+                            onMouseLeave={() => setShowVolumeSlider(false)}
+                          >
+                            <button
+                              onClick={toggleMute}
+                              className="text-white hover:text-purple-400 transition-colors p-1"
+                              title={isMuted ? "Unmute" : "Mute"}
+                            >
+                              {isMuted || volume === 0 ? (
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" clipRule="evenodd" />
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" />
+                                </svg>
+                              ) : volume < 50 ? (
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                                </svg>
+                              ) : (
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                                </svg>
+                              )}
+                            </button>
+
+                            {/* Volume slider */}
+                            <AnimatePresence>
+                              {showVolumeSlider && (
+                                <motion.div
+                                  initial={{ opacity: 0, width: 0 }}
+                                  animate={{ opacity: 1, width: 80 }}
+                                  exit={{ opacity: 0, width: 0 }}
+                                  transition={{ duration: 0.2 }}
+                                  className="flex items-center"
+                                >
+                                  <input
+                                    type="range"
+                                    min="0"
+                                    max="100"
+                                    value={isMuted ? 0 : volume}
+                                    onChange={(e) => {
+                                      const newVolume = parseInt(e.target.value);
+                                      handleVolumeChange(newVolume);
+                                      if (newVolume > 0 && isMuted) {
+                                        setIsMuted(false);
+                                      }
+                                    }}
+                                    className="w-20 h-1 bg-gray-600 rounded-lg appearance-none cursor-pointer slider"
+                                    style={{
+                                      background: `linear-gradient(to right, #8b5cf6 0%, #8b5cf6 ${isMuted ? 0 : volume}%, #4b5563 ${isMuted ? 0 : volume}%, #4b5563 100%)`
+                                    }}
+                                  />
+                                </motion.div>
+                              )}
+                            </AnimatePresence>
+
+                            {/* Volume percentage */}
+                            <span className="text-xs text-gray-400 w-8 text-right">
+                              {isMuted ? 0 : volume}%
+                            </span>
+                          </div>
+                        </div>
+
+                        {/* Right side controls */}
+                        <div className="flex items-center space-x-2">
+                          {/* Quality selector (placeholder) */}
+                          <button
+                            className="text-xs text-gray-400 hover:text-white transition-colors px-2 py-1 bg-white/10 rounded"
+                            title="Video Quality"
+                          >
+                            AUTO
+                          </button>
+
+                          {/* Settings button */}
+                          <button
+                            className="text-white hover:text-purple-400 transition-colors p-1"
+                            title="Settings"
+                          >
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                             </svg>
                           </button>
-                        )}
-
-                        {episodes.length > 0 && selectedEpisode < episodes.length && (
-                          <button
-                            onClick={() => handleEpisodeChange(selectedEpisode + 1)}
-                            className="text-white hover:text-purple-400 transition-colors"
-                            title="Next Episode"
-                          >
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                            </svg>
-                          </button>
-                        )}
-
-                        <button
-                          onClick={toggleFullscreen}
-                          className="text-white hover:text-purple-400 transition-colors"
-                          title={fullscreen ? "Exit Fullscreen" : "Enter Fullscreen"}
-                        >
-                          {fullscreen ? (
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                            </svg>
-                          ) : (
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5v-4m0 4h-4m4 0l-5-5" />
-                            </svg>
-                          )}
-                        </button>
+                        </div>
                       </div>
                     </motion.div>
                   )}
@@ -733,8 +899,8 @@ export default function TVWatchPage() {
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.98 }}
                             className={`px-5 py-3 rounded-xl whitespace-nowrap transition-all duration-300 font-medium ${selectedSeason === season.season_number
-                                ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg shadow-indigo-600/30'
-                                : 'bg-[#2a2a4a]/50 text-gray-300 hover:bg-[#2a2a4a]/80 border border-indigo-500/20'
+                              ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg shadow-indigo-600/30'
+                              : 'bg-[#2a2a4a]/50 text-gray-300 hover:bg-[#2a2a4a]/80 border border-indigo-500/20'
                               }`}
                           >
                             <span className="flex items-center">
@@ -775,8 +941,8 @@ export default function TVWatchPage() {
                           transition={{ duration: 0.2 }}
                           onClick={() => handleEpisodeChange(episode.episode_number)}
                           className={`cursor-pointer rounded-xl overflow-hidden shadow-lg ${selectedEpisode === episode.episode_number
-                              ? 'ring-2 ring-indigo-500 bg-gradient-to-br from-indigo-900/40 to-purple-900/40 shadow-indigo-500/20'
-                              : 'border border-indigo-500/20 bg-[#2a2a4a]/20 hover:bg-[#2a2a4a]/40'
+                            ? 'ring-2 ring-indigo-500 bg-gradient-to-br from-indigo-900/40 to-purple-900/40 shadow-indigo-500/20'
+                            : 'border border-indigo-500/20 bg-[#2a2a4a]/20 hover:bg-[#2a2a4a]/40'
                             }`}
                         >
                           <div className="relative h-32 bg-[#1a1a2e]">
