@@ -694,182 +694,6 @@ export default function TVWatchPage() {
                   style={{ backgroundColor: "#000" }}
                 // src is intentionally omitted here and set via JavaScript
                 ></iframe>
-
-                {/* Custom player controls */}
-                <AnimatePresence>
-                  {showControls && (
-                    <motion.div
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      transition={{ duration: 0.2 }}
-                      className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 to-transparent p-4 z-20"
-                    >
-                      {/* Main controls row */}
-                      <div className="flex items-center justify-between mb-3">
-                        <div className="flex items-center space-x-4">
-                          <span className="text-sm font-medium bg-purple-900/70 px-2 py-1 rounded">
-                            S{selectedSeason}:E{selectedEpisode}
-                          </span>
-                          <span className="text-sm hidden sm:inline">
-                            {episodes.find(ep => ep.episode_number === selectedEpisode)?.name || "Episode"}
-                          </span>
-                        </div>
-
-                        <div className="flex items-center space-x-3">
-                          {/* Episode navigation */}
-                          {selectedEpisode > 1 && (
-                            <button
-                              onClick={() => handleEpisodeChange(selectedEpisode - 1)}
-                              className="text-white hover:text-purple-400 transition-colors p-1"
-                              title="Previous Episode"
-                            >
-                              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                              </svg>
-                            </button>
-                          )}
-
-                          {episodes.length > 0 && selectedEpisode < episodes.length && (
-                            <button
-                              onClick={() => handleEpisodeChange(selectedEpisode + 1)}
-                              className="text-white hover:text-purple-400 transition-colors p-1"
-                              title="Next Episode"
-                            >
-                              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                              </svg>
-                            </button>
-                          )}
-
-                          <button
-                            onClick={toggleFullscreen}
-                            className="text-white hover:text-purple-400 transition-colors p-1"
-                            title={fullscreen ? "Exit Fullscreen" : "Enter Fullscreen"}
-                          >
-                            {fullscreen ? (
-                              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                              </svg>
-                            ) : (
-                              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5v-4m0 4h-4m4 0l-5-5" />
-                              </svg>
-                            )}
-                          </button>
-                        </div>
-                      </div>
-
-                      {/* Playback controls row */}
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center space-x-4">
-                          {/* Play/Pause button */}
-                          <button
-                            onClick={togglePlayPause}
-                            className="text-white hover:text-purple-400 transition-colors p-2 hover:bg-white/10 rounded-full"
-                            title={isPlaying ? "Pause" : "Play"}
-                          >
-                            {isPlaying ? (
-                              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                              </svg>
-                            ) : (
-                              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1.586a1 1 0 01.707.293l2.414 2.414a1 1 0 00.707.293H15M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                              </svg>
-                            )}
-                          </button>
-
-                          {/* Volume controls */}
-                          <div
-                            className="flex items-center space-x-2 relative"
-                            onMouseEnter={() => setShowVolumeSlider(true)}
-                            onMouseLeave={() => setShowVolumeSlider(false)}
-                          >
-                            <button
-                              onClick={toggleMute}
-                              className="text-white hover:text-purple-400 transition-colors p-1"
-                              title={isMuted ? "Unmute" : "Mute"}
-                            >
-                              {isMuted || volume === 0 ? (
-                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" clipRule="evenodd" />
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2" />
-                                </svg>
-                              ) : volume < 50 ? (
-                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
-                                </svg>
-                              ) : (
-                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
-                                </svg>
-                              )}
-                            </button>
-
-                            {/* Volume slider */}
-                            <AnimatePresence>
-                              {showVolumeSlider && (
-                                <motion.div
-                                  initial={{ opacity: 0, width: 0 }}
-                                  animate={{ opacity: 1, width: 80 }}
-                                  exit={{ opacity: 0, width: 0 }}
-                                  transition={{ duration: 0.2 }}
-                                  className="flex items-center"
-                                >
-                                  <input
-                                    type="range"
-                                    min="0"
-                                    max="100"
-                                    value={isMuted ? 0 : volume}
-                                    onChange={(e) => {
-                                      const newVolume = parseInt(e.target.value);
-                                      handleVolumeChange(newVolume);
-                                      if (newVolume > 0 && isMuted) {
-                                        setIsMuted(false);
-                                      }
-                                    }}
-                                    className="w-20 h-1 bg-gray-600 rounded-lg appearance-none cursor-pointer slider"
-                                    style={{
-                                      background: `linear-gradient(to right, #8b5cf6 0%, #8b5cf6 ${isMuted ? 0 : volume}%, #4b5563 ${isMuted ? 0 : volume}%, #4b5563 100%)`
-                                    }}
-                                  />
-                                </motion.div>
-                              )}
-                            </AnimatePresence>
-
-                            {/* Volume percentage */}
-                            <span className="text-xs text-gray-400 w-8 text-right">
-                              {isMuted ? 0 : volume}%
-                            </span>
-                          </div>
-                        </div>
-
-                        {/* Right side controls */}
-                        <div className="flex items-center space-x-2">
-                          {/* Quality selector (placeholder) */}
-                          <button
-                            className="text-xs text-gray-400 hover:text-white transition-colors px-2 py-1 bg-white/10 rounded"
-                            title="Video Quality"
-                          >
-                            AUTO
-                          </button>
-
-                          {/* Settings button */}
-                          <button
-                            className="text-white hover:text-purple-400 transition-colors p-1"
-                            title="Settings"
-                          >
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                            </svg>
-                          </button>
-                        </div>
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
               </div>
 
               {/* Season and Episode Selection */}
@@ -878,154 +702,583 @@ export default function TVWatchPage() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: 0.9 }}
-                  className="mb-8 bg-gradient-to-br from-[#1a1a2e]/80 to-[#16213e]/80 backdrop-blur-md p-8 border border-indigo-500/20 shadow-[0_0_25px_rgba(79,70,229,0.15)]"
+                  className="mb-8 bg-gradient-to-br from-[#0f0f23]/95 via-[#1a1a2e]/90 to-[#16213e]/95 backdrop-blur-xl p-8 rounded-2xl border border-indigo-400/30 shadow-[0_0_40px_rgba(99,102,241,0.25)] relative overflow-hidden"
                 >
-                  <h3 className="text-xl font-semibold mb-6 flex items-center bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 mr-3 text-indigo-400" viewBox="0 0 20 20" fill="currentColor">
-                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" />
-                    </svg>
-                    Select Season & Episode
-                  </h3>
+                  {/* Animated background elements */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-purple-600/5 via-transparent to-blue-600/5 animate-pulse"></div>
+                  <div className="absolute top-0 left-0 w-32 h-32 bg-gradient-to-br from-indigo-500/10 to-purple-500/10 rounded-full blur-3xl animate-float"></div>
+                  <div className="absolute bottom-0 right-0 w-24 h-24 bg-gradient-to-br from-blue-500/10 to-cyan-500/10 rounded-full blur-2xl animate-float-delayed"></div>
 
-                  {/* Season tabs */}
-                  <div className="mb-8 overflow-x-auto scrollbar-thin scrollbar-thumb-indigo-700 scrollbar-track-[#1a1a2e] pb-2">
-                    <div className="flex space-x-3">
-                      {tvDetails.seasons
-                        .filter(season => season.season_number > 0) // Filter out specials (season 0)
-                        .map(season => (
-                          <motion.button
-                            key={season.id}
-                            onClick={() => handleSeasonChange(season.season_number)}
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.98 }}
-                            className={`px-5 py-3 rounded-xl whitespace-nowrap transition-all duration-300 font-medium ${selectedSeason === season.season_number
-                              ? 'bg-gradient-to-r from-indigo-600 to-purple-600 text-white shadow-lg shadow-indigo-600/30'
-                              : 'bg-[#2a2a4a]/50 text-gray-300 hover:bg-[#2a2a4a]/80 border border-indigo-500/20'
-                              }`}
-                          >
-                            <span className="flex items-center">
-                              <svg xmlns="http://www.w3.org/2000/svg" className={`h-4 w-4 mr-2 ${selectedSeason === season.season_number ? 'text-indigo-300' : 'text-indigo-500'}`} viewBox="0 0 20 20" fill="currentColor">
-                                <path fillRule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zm0 6a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1v-2zm0 6a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1v-2z" clipRule="evenodd" />
-                              </svg>
-                              Season {season.season_number}
-                              {season.episode_count > 0 && (
-                                <span className={`ml-2 text-xs px-2 py-0.5 rounded-full ${selectedSeason === season.season_number ? 'bg-white/20' : 'bg-indigo-600/30'}`}>
-                                  {season.episode_count}
-                                </span>
-                              )}
-                            </span>
-                          </motion.button>
-                        ))}
-                    </div>
-                  </div>
-
-                  {/* Episode grid with enhanced UI */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                    {playerLoading && episodes.length === 0 ? (
-                      // Loading skeletons for episodes with improved design
-                      Array.from({ length: 8 }).map((_, index) => (
-                        <div key={index} className="bg-[#2a2a4a]/30 rounded-xl p-3 animate-pulse border border-indigo-500/10">
-                          <div className="w-full h-28 bg-[#2a2a4a]/70 rounded-lg mb-3"></div>
-                          <div className="h-5 bg-[#2a2a4a]/70 rounded-lg w-3/4 mb-2"></div>
-                          <div className="h-4 bg-[#2a2a4a]/70 rounded-lg w-1/2"></div>
-                        </div>
-                      ))
-                    ) : episodes.length > 0 ? (
-                      episodes.map(episode => (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: 1.1 }}
+                    className="relative z-10"
+                  >
+                    <div className="flex items-center justify-between mb-8">
+                      <h3 className="text-2xl font-bold flex items-center bg-gradient-to-r from-indigo-300 via-purple-300 to-pink-300 bg-clip-text text-transparent">
                         <motion.div
-                          key={episode.id}
-                          initial={{ opacity: 0, scale: 0.95 }}
-                          animate={{ opacity: 1, scale: 1 }}
-                          whileHover={{ scale: 1.03, y: -5 }}
-                          whileTap={{ scale: 0.98 }}
-                          transition={{ duration: 0.2 }}
-                          onClick={() => handleEpisodeChange(episode.episode_number)}
-                          className={`cursor-pointer rounded-xl overflow-hidden shadow-lg ${selectedEpisode === episode.episode_number
-                            ? 'ring-2 ring-indigo-500 bg-gradient-to-br from-indigo-900/40 to-purple-900/40 shadow-indigo-500/20'
-                            : 'border border-indigo-500/20 bg-[#2a2a4a]/20 hover:bg-[#2a2a4a]/40'
-                            }`}
+                          whileHover={{ rotate: 360 }}
+                          transition={{ duration: 0.5 }}
+                          className="mr-4 p-2 bg-gradient-to-r from-indigo-600/20 to-purple-600/20 rounded-xl backdrop-blur-sm border border-indigo-400/20"
                         >
-                          <div className="relative h-32 bg-[#1a1a2e]">
-                            {episode.still_path ? (
-                              <Image
-                                src={`https://image.tmdb.org/t/p/w300${episode.still_path}`}
-                                alt={episode.name}
-                                fill
-                                className="object-cover"
-                                unoptimized
-                              />
-                            ) : (
-                              <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-indigo-900/30 to-purple-900/30">
-                                <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 text-indigo-400/50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                </svg>
-                              </div>
-                            )}
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7 text-indigo-400" viewBox="0 0 20 20" fill="currentColor">
+                            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" />
+                          </svg>
+                        </motion.div>
+                        Select Season & Episode
+                      </h3>
 
-                            {/* Episode badge with improved design */}
-                            <div className="absolute top-3 left-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white text-xs font-medium px-3 py-1 rounded-full shadow-md">
-                              EP {episode.episode_number}
-                            </div>
+                      {/* Episode counter */}
+                      <motion.div
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        transition={{ duration: 0.5, delay: 1.3 }}
+                        className="bg-gradient-to-r from-indigo-600/30 to-purple-600/30 backdrop-blur-sm px-4 py-2 rounded-full border border-indigo-400/30"
+                      >
+                        <span className="text-sm font-medium text-indigo-200">
+                          {episodes.length} Episodes Available
+                        </span>
+                      </motion.div>
+                    </div>
 
-                            {/* Play overlay on hover */}
-                            <div className="absolute inset-0 bg-indigo-900/60 opacity-0 hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                              <div className="bg-white/20 rounded-full p-3 backdrop-blur-sm">
-                                <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-white" viewBox="0 0 20 20" fill="currentColor">
-                                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" />
-                                </svg>
+                    {/* Season tabs with enhanced design */}
+                    <motion.div
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ duration: 0.6, delay: 1.2 }}
+                      className="mb-10"
+                    >
+                      <div className="flex items-center mb-4">
+                        <div className="h-px bg-gradient-to-r from-transparent via-indigo-400/50 to-transparent flex-1"></div>
+                        <span className="px-4 text-sm font-medium text-indigo-300 bg-[#1a1a2e]/80 rounded-full">
+                          Choose Season
+                        </span>
+                        <div className="h-px bg-gradient-to-r from-transparent via-indigo-400/50 to-transparent flex-1"></div>
+                      </div>
+
+                      <div className="overflow-x-auto scrollbar-thin scrollbar-thumb-indigo-600/50 scrollbar-track-transparent pb-4">
+                        <div className="flex space-x-4 min-w-max px-2">
+                          {tvDetails.seasons
+                            .filter(season => season.season_number > 0)
+                            .map((season, index) => (
+                              <motion.button
+                                key={season.id}
+                                onClick={() => handleSeasonChange(season.season_number)}
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ duration: 0.4, delay: 1.3 + (index * 0.1) }}
+                                whileHover={{
+                                  scale: 1.05,
+                                  y: -2,
+                                  boxShadow: "0 10px 25px rgba(99, 102, 241, 0.3)"
+                                }}
+                                whileTap={{ scale: 0.98 }}
+                                className={`group relative px-6 py-4 rounded-2xl whitespace-nowrap transition-all duration-500 font-semibold min-w-[140px] ${selectedSeason === season.season_number
+                                    ? 'bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-600 text-white shadow-lg shadow-indigo-600/40 border border-indigo-400/50'
+                                    : 'bg-gradient-to-r from-[#2a2a4a]/40 to-[#2a2a4a]/60 text-gray-300 hover:from-[#2a2a4a]/70 hover:to-[#2a2a4a]/90 border border-indigo-500/20 hover:border-indigo-400/40'
+                                  }`}
+                              >
+                                {/* Animated background for selected season */}
+                                {selectedSeason === season.season_number && (
+                                  <motion.div
+                                    layoutId="selectedSeason"
+                                    className="absolute inset-0 bg-gradient-to-r from-indigo-600/20 to-purple-600/20 rounded-2xl"
+                                    transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                                  />
+                                )}
+
+                                <div className="relative z-10 flex flex-col items-center">
+                                  <div className="flex items-center mb-1">
+                                    <motion.svg
+                                      xmlns="http://www.w3.org/2000/svg"
+                                      className={`h-5 w-5 mr-2 transition-colors duration-300 ${selectedSeason === season.season_number ? 'text-indigo-200' : 'text-indigo-400 group-hover:text-indigo-300'
+                                        }`}
+                                      viewBox="0 0 20 20"
+                                      fill="currentColor"
+                                      whileHover={{ rotate: 15 }}
+                                      transition={{ duration: 0.2 }}
+                                    >
+                                      <path fillRule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zm0 6a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1v-2zm0 6a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1v-2z" clipRule="evenodd" />
+                                    </motion.svg>
+                                    <span className="text-sm font-bold">Season {season.season_number}</span>
+                                  </div>
+
+                                  {season.episode_count > 0 && (
+                                    <motion.span
+                                      className={`text-xs px-3 py-1 rounded-full font-medium transition-all duration-300 ${selectedSeason === season.season_number
+                                          ? 'bg-white/25 text-indigo-100'
+                                          : 'bg-indigo-600/30 text-indigo-200 group-hover:bg-indigo-600/40'
+                                        }`}
+                                      whileHover={{ scale: 1.1 }}
+                                    >
+                                      {season.episode_count} Episodes
+                                    </motion.span>
+                                  )}
+                                </div>
+
+                                {/* Hover glow effect */}
+                                <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-indigo-600/0 via-purple-600/0 to-indigo-600/0 group-hover:from-indigo-600/10 group-hover:via-purple-600/10 group-hover:to-indigo-600/10 transition-all duration-500"></div>
+                              </motion.button>
+                            ))}
+                        </div>
+                      </div>
+                    </motion.div>
+
+                    {/* Episodes section with enhanced grid */}
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.6, delay: 1.4 }}
+                    >
+                      <div className="flex items-center justify-between mb-6">
+                        <div className="flex items-center">
+                          <div className="h-px bg-gradient-to-r from-transparent via-purple-400/50 to-transparent flex-1 w-16"></div>
+                          <span className="px-4 text-sm font-medium text-purple-300 bg-[#1a1a2e]/80 rounded-full">
+                            Episodes - Season {selectedSeason}
+                          </span>
+                          <div className="h-px bg-gradient-to-r from-transparent via-purple-400/50 to-transparent flex-1 w-16"></div>
+                        </div>
+
+                        {/* Quick navigation */}
+                        <div className="flex items-center space-x-2">
+                          <motion.button
+                            whileHover={{ scale: 1.1 }}
+                            whileTap={{ scale: 0.9 }}
+                            onClick={() => setSelectedEpisode(1)}
+                            className="p-2 bg-gradient-to-r from-purple-600/20 to-indigo-600/20 rounded-lg border border-purple-400/30 hover:border-purple-400/50 transition-all duration-300"
+                            title="Go to first episode"
+                          >
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-purple-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 19l-7-7 7-7m8 14l-7-7 7-7" />
+                            </svg>
+                          </motion.button>
+
+                          <motion.button
+                            whileHover={{ scale: 1.1 }}
+                            whileTap={{ scale: 0.9 }}
+                            onClick={() => setSelectedEpisode(episodes.length)}
+                            className="p-2 bg-gradient-to-r from-indigo-600/20 to-purple-600/20 rounded-lg border border-indigo-400/30 hover:border-indigo-400/50 transition-all duration-300"
+                            title="Go to last episode"
+                          >
+                            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-indigo-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 5l7 7-7 7M5 5l7 7-7 7" />
+                            </svg>
+                          </motion.button>
+                        </div>
+                      </div>
+
+                      {/* Enhanced episode grid */}
+                      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+                        {playerLoading && episodes.length === 0 ? (
+                          // Enhanced loading skeletons
+                          Array.from({ length: 10 }).map((_, index) => (
+                            <motion.div
+                              key={index}
+                              initial={{ opacity: 0, scale: 0.9 }}
+                              animate={{ opacity: 1, scale: 1 }}
+                              transition={{ duration: 0.4, delay: index * 0.1 }}
+                              className="bg-gradient-to-br from-[#2a2a4a]/30 to-[#2a2a4a]/50 rounded-2xl p-4 animate-pulse border border-indigo-500/20"
+                            >
+                              <div className="w-full h-32 bg-gradient-to-br from-[#2a2a4a]/70 to-[#2a2a4a]/90 rounded-xl mb-4"></div>
+                              <div className="h-5 bg-[#2a2a4a]/70 rounded-lg w-3/4 mb-3"></div>
+                              <div className="h-4 bg-[#2a2a4a]/70 rounded-lg w-1/2 mb-2"></div>
+                              <div className="h-3 bg-[#2a2a4a]/70 rounded-lg w-2/3"></div>
+                            </motion.div>
+                          ))
+                        ) : episodes.length > 0 ? (
+                          episodes.map((episode, index) => (
+                            <motion.div
+                              key={episode.id}
+                              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                              animate={{ opacity: 1, scale: 1, y: 0 }}
+                              transition={{ duration: 0.4, delay: index * 0.05 }}
+                              whileHover={{
+                                scale: 1.05,
+                                y: -8,
+                                rotateY: 5,
+                                boxShadow: "0 20px 40px rgba(99, 102, 241, 0.3)"
+                              }}
+                              whileTap={{ scale: 0.98 }}
+                              onClick={() => handleEpisodeChange(episode.episode_number)}
+                              className={`group cursor-pointer rounded-2xl overflow-hidden transition-all duration-500 transform-gpu ${selectedEpisode === episode.episode_number
+                                  ? 'ring-2 ring-indigo-400 bg-gradient-to-br from-indigo-900/60 via-purple-900/50 to-indigo-900/60 shadow-lg shadow-indigo-500/30'
+                                  : 'border border-indigo-500/30 bg-gradient-to-br from-[#2a2a4a]/30 to-[#2a2a4a]/50 hover:from-[#2a2a4a]/50 hover:to-[#2a2a4a]/70 hover:border-indigo-400/50'
+                                }`}
+                            >
+                              {/* Episode thumbnail with enhanced effects */}
+                              <div className="relative h-36 bg-gradient-to-br from-[#1a1a2e] to-[#16213e] overflow-hidden">
+                                {episode.still_path ? (
+                                  <>
+                                    <Image
+                                      src={`https://image.tmdb.org/t/p/w500${episode.still_path}`}
+                                      alt={episode.name}
+                                      fill
+                                      className="object-cover transition-transform duration-700 group-hover:scale-110"
+                                      unoptimized
+                                    />
+                                    {/* Gradient overlay */}
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+                                  </>
+                                ) : (
+                                  <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-indigo-900/40 via-purple-900/30 to-indigo-900/40">
+                                    <motion.svg
+                                      xmlns="http://www.w3.org/2000/svg"
+                                      className="h-14 w-14 text-indigo-400/60"
+                                      fill="none"
+                                      viewBox="0 0 24 24"
+                                      stroke="currentColor"
+                                      animate={{ rotate: [0, 5, -5, 0] }}
+                                      transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                                    >
+                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                    </motion.svg>
+                                  </div>
+                                )}
+
+                                {/* Enhanced episode badge */}
+                                <motion.div
+                                  className="absolute top-3 left-3 bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-600 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-lg backdrop-blur-sm border border-white/20"
+                                  whileHover={{ scale: 1.1 }}
+                                  transition={{ duration: 0.2 }}
+                                >
+                                  EP {episode.episode_number}
+                                </motion.div>
+
+                                {/* Watch status indicator */}
+                                {selectedEpisode === episode.episode_number && (
+                                  <motion.div
+                                    initial={{ scale: 0 }}
+                                    animate={{ scale: 1 }}
+                                    className="absolute top-3 right-3 bg-green-500/90 text-white text-xs font-medium px-2 py-1 rounded-full flex items-center"
+                                  >
+                                    <div className="w-2 h-2 bg-green-300 rounded-full mr-1 animate-pulse"></div>
+                                    NOW
+                                  </motion.div>
+                                )}
+
+                                {/* Enhanced play overlay */}
+                                <motion.div
+                                  className="absolute inset-0 bg-gradient-to-br from-indigo-900/80 via-purple-900/70 to-indigo-900/80 opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-center justify-center backdrop-blur-sm"
+                                  whileHover={{ backdropFilter: "blur(8px)" }}
+                                >
+                                  <motion.div
+                                    className="bg-white/20 rounded-full p-4 backdrop-blur-md border border-white/30"
+                                    whileHover={{ scale: 1.2, rotate: 90 }}
+                                    transition={{ duration: 0.3 }}
+                                  >
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 text-white" viewBox="0 0 20 20" fill="currentColor">
+                                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" />
+                                    </svg>
+                                  </motion.div>
+
+                                  {/* Ripple effect */}
+                                  <motion.div
+                                    className="absolute inset-0 rounded-full border-2 border-white/30"
+                                    animate={{ scale: [1, 1.5], opacity: [0.5, 0] }}
+                                    transition={{ duration: 2, repeat: Infinity }}
+                                  />
+                                </motion.div>
                               </div>
+
+                              {/* Enhanced episode info */}
+                              <div className="p-5">
+                                <motion.h4
+                                  className="font-semibold text-base mb-2 text-white group-hover:text-indigo-200 transition-colors duration-300 line-clamp-2"
+                                  title={episode.name}
+                                  whileHover={{ x: 2 }}
+                                  transition={{ duration: 0.2 }}
+                                >
+                                  {episode.name}
+                                </motion.h4>
+
+                                {/* Episode metadata */}
+                                <div className="space-y-2">
+                                  {episode.air_date && (
+                                    <motion.div
+                                      className="flex items-center text-xs text-indigo-300/80 group-hover:text-indigo-300 transition-colors duration-300"
+                                      whileHover={{ x: 2 }}
+                                    >
+                                      <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                      </svg>
+                                      {new Date(episode.air_date).toLocaleDateString('en-US', {
+                                        month: 'short',
+                                        day: 'numeric',
+                                        year: 'numeric'
+                                      })}
+                                    </motion.div>
+                                  )}
+
+                                  {/* Episode overview preview */}
+                                  {episode.overview && (
+                                    <motion.p
+                                      className="text-xs text-gray-400 line-clamp-2 group-hover:text-gray-300 transition-colors duration-300"
+                                      whileHover={{ x: 2 }}
+                                    >
+                                      {episode.overview}
+                                    </motion.p>
+                                  )}
+                                </div>
+
+                                {/* Enhanced progress indicator */}
+                                {selectedEpisode === episode.episode_number && (
+                                  <motion.div
+                                    className="mt-4 w-full bg-[#1a1a2e]/80 rounded-full h-2 overflow-hidden"
+                                    initial={{ scaleX: 0 }}
+                                    animate={{ scaleX: 1 }}
+                                    transition={{ duration: 0.5 }}
+                                  >
+                                    <motion.div
+                                      className="bg-gradient-to-r from-indigo-500 via-purple-500 to-indigo-500 h-2 rounded-full relative"
+                                      initial={{ width: 0 }}
+                                      animate={{ width: "75%" }}
+                                      transition={{ duration: 1, delay: 0.2 }}
+                                    >
+                                      <motion.div
+                                        className="absolute right-0 top-0 w-1 h-2 bg-white/60 rounded-full"
+                                        animate={{ opacity: [0.5, 1, 0.5] }}
+                                        transition={{ duration: 1.5, repeat: Infinity }}
+                                      />
+                                    </motion.div>
+                                  </motion.div>
+                                )}
+
+                                {/* Episode actions */}
+                                <motion.div
+                                  className="mt-4 flex items-center justify-between opacity-0 group-hover:opacity-100 transition-all duration-300"
+                                  initial={{ y: 10 }}
+                                  whileHover={{ y: 0 }}
+                                >
+                                  <div className="flex items-center space-x-2">
+                                    <motion.button
+                                      whileHover={{ scale: 1.1 }}
+                                      whileTap={{ scale: 0.9 }}
+                                      className="p-1.5 bg-indigo-600/30 hover:bg-indigo-600/50 rounded-lg transition-colors duration-200"
+                                      title="Add to watchlist"
+                                    >
+                                      <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 text-indigo-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                                      </svg>
+                                    </motion.button>
+
+                                    <motion.button
+                                      whileHover={{ scale: 1.1 }}
+                                      whileTap={{ scale: 0.9 }}
+                                      className="p-1.5 bg-purple-600/30 hover:bg-purple-600/50 rounded-lg transition-colors duration-200"
+                                      title="Share episode"
+                                    >
+                                      <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 text-purple-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z" />
+                                      </svg>
+                                    </motion.button>
+                                  </div>
+
+                                  <span className="text-xs text-indigo-400 font-medium">
+                                    {selectedEpisode === episode.episode_number ? 'Playing' : 'Click to play'}
+                                  </span>
+                                </motion.div>
+                              </div>
+
+                              {/* Hover glow effect */}
+                              <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-indigo-600/0 via-purple-600/0 to-indigo-600/0 group-hover:from-indigo-600/5 group-hover:via-purple-600/5 group-hover:to-indigo-600/5 transition-all duration-700 pointer-events-none"></div>
+                            </motion.div>
+                          ))
+                        ) : (
+                          // Enhanced empty state
+                          <motion.div
+                            className="col-span-full text-center py-16 text-gray-400 bg-gradient-to-br from-[#2a2a4a]/20 to-[#2a2a4a]/40 rounded-2xl border border-indigo-500/20 relative overflow-hidden"
+                            initial={{ opacity: 0, scale: 0.9 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{ duration: 0.5 }}
+                          >
+                            <div className="absolute inset-0 bg-gradient-to-r from-indigo-600/5 via-purple-600/5 to-indigo-600/5 animate-pulse"></div>
+
+                            <motion.div
+                              animate={{ y: [0, -10, 0] }}
+                              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                            >
+                              <svg xmlns="http://www.w3.org/2000/svg" className="h-16 w-16 mx-auto text-indigo-400/50 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                              </svg>
+                            </motion.div>
+
+                            <h4 className="text-lg font-semibold text-indigo-300 mb-2">No Episodes Found</h4>
+                            <p className="text-indigo-300/80 mb-6">This season doesn't have any episodes available yet.</p>
+
+                            <div className="flex items-center justify-center space-x-4">
+                              <motion.button
+                                onClick={() => handleSeasonChange(selectedSeason > 1 ? selectedSeason - 1 : 1)}
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                                className="px-6 py-3 bg-gradient-to-r from-indigo-600/40 to-purple-600/40 hover:from-indigo-600/60 hover:to-purple-600/60 rounded-xl text-sm font-medium transition-all duration-300 border border-indigo-400/30"
+                              >
+                                Try Previous Season
+                              </motion.button>
+
+                              <motion.button
+                                onClick={() => window.location.reload()}
+                                whileHover={{ scale: 1.05 }}
+                                whileTap={{ scale: 0.95 }}
+                                className="px-6 py-3 bg-gradient-to-r from-purple-600/40 to-indigo-600/40 hover:from-purple-600/60 hover:to-indigo-600/60 rounded-xl text-sm font-medium transition-all duration-300 border border-purple-400/30"
+                              >
+                                Refresh Page
+                              </motion.button>
                             </div>
+                          </motion.div>
+                        )}
+                      </div>
+
+                      {/* Enhanced navigation controls */}
+                      {episodes.length > 0 && (
+                        <motion.div
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ duration: 0.5, delay: 1.6 }}
+                          className="mt-8 flex items-center justify-between bg-gradient-to-r from-[#1a1a2e]/60 to-[#16213e]/60 backdrop-blur-md p-6 rounded-2xl border border-indigo-400/20"
+                        >
+                          <div className="flex items-center space-x-4">
+                            <motion.button
+                              onClick={() => selectedEpisode > 1 && handleEpisodeChange(selectedEpisode - 1)}
+                              disabled={selectedEpisode <= 1}
+                              whileHover={{ scale: selectedEpisode > 1 ? 1.05 : 1 }}
+                              whileTap={{ scale: selectedEpisode > 1 ? 0.95 : 1 }}
+                              className={`flex items-center px-4 py-2 rounded-xl font-medium transition-all duration-300 ${selectedEpisode > 1
+                                  ? 'bg-gradient-to-r from-indigo-600/30 to-purple-600/30 hover:from-indigo-600/50 hover:to-purple-600/50 text-white border border-indigo-400/30'
+                                  : 'bg-gray-600/20 text-gray-500 cursor-not-allowed border border-gray-600/20'
+                                }`}
+                            >
+                              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                              </svg>
+                              Previous
+                            </motion.button>
+
+                            <motion.button
+                              onClick={() => selectedEpisode < episodes.length && handleEpisodeChange(selectedEpisode + 1)}
+                              disabled={selectedEpisode >= episodes.length}
+                              whileHover={{ scale: selectedEpisode < episodes.length ? 1.05 : 1 }}
+                              whileTap={{ scale: selectedEpisode < episodes.length ? 0.95 : 1 }}
+                              className={`flex items-center px-4 py-2 rounded-xl font-medium transition-all duration-300 ${selectedEpisode < episodes.length
+                                  ? 'bg-gradient-to-r from-purple-600/30 to-indigo-600/30 hover:from-purple-600/50 hover:to-indigo-600/50 text-white border border-purple-400/30'
+                                  : 'bg-gray-600/20 text-gray-500 cursor-not-allowed border border-gray-600/20'
+                                }`}
+                            >
+                              Next
+                              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                              </svg>
+                            </motion.button>
                           </div>
 
-                          <div className="p-4">
-                            <h4 className="font-medium text-sm truncate" title={episode.name}>
-                              {episode.name}
-                            </h4>
+                          {/* Episode counter and auto-play toggle */}
+                          <div className="flex items-center space-x-6">
+                            <div className="text-sm text-indigo-300">
+                              <span className="font-semibold text-white">{selectedEpisode}</span>
+                              <span className="text-indigo-400 mx-1">of</span>
+                              <span className="font-semibold text-white">{episodes.length}</span>
+                              <span className="text-indigo-400 ml-1">episodes</span>
+                            </div>
 
-                            {episode.air_date && (
-                              <div className="flex items-center mt-2 text-xs text-indigo-300">
-                                <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                </svg>
-                                {new Date(episode.air_date).toLocaleDateString()}
+                            <motion.label
+                              className="flex items-center cursor-pointer"
+                              whileHover={{ scale: 1.02 }}
+                            >
+                              <input
+                                type="checkbox"
+                                className="sr-only"
+                              // Add your auto-play state here
+                              />
+                              <div className="relative">
+                                <div className="w-10 h-6 bg-gray-600/50 rounded-full shadow-inner border border-gray-500/30"></div>
+                                <motion.div
+                                  className="absolute w-4 h-4 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full shadow top-1 left-1 transition-transform duration-300"
+                                // Add transform based on auto-play state
+                                />
                               </div>
-                            )}
-
-                            {/* Episode progress indicator (for selected episode) */}
-                            {selectedEpisode === episode.episode_number && (
-                              <div className="mt-3 w-full bg-[#1a1a2e] rounded-full h-1.5">
-                                <div className="bg-gradient-to-r from-indigo-500 to-purple-500 h-1.5 rounded-full w-3/4"></div>
-                              </div>
-                            )}
+                              <span className="ml-3 text-sm text-indigo-300">Auto-play next</span>
+                            </motion.label>
                           </div>
                         </motion.div>
-                      ))
-                    ) : (
-                      <div className="col-span-full text-center py-12 text-gray-400 bg-[#2a2a4a]/20 rounded-xl border border-indigo-500/10">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 mx-auto text-indigo-400/50 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                        <p className="text-indigo-300">No episodes found for this season.</p>
-                        <button
-                          onClick={() => handleSeasonChange(selectedSeason > 1 ? selectedSeason - 1 : 1)}
-                          className="mt-4 px-4 py-2 bg-indigo-600/30 hover:bg-indigo-600/50 rounded-lg text-sm transition-colors"
-                        >
-                          Try another season
-                        </button>
-                      </div>
-                    )}
-                  </div>
+                      )}
 
-                  {/* Season information */}
-                  {tvDetails.seasons && tvDetails.seasons.find(s => s.season_number === selectedSeason)?.air_date && (
-                    <div className="mt-8 pt-6 border-t border-indigo-500/20 text-center">
-                      <p className="text-indigo-300 text-sm">
-                        <span className="font-medium">Season {selectedSeason}</span> aired on {formatDate(tvDetails.seasons.find(s => s.season_number === selectedSeason)?.air_date || '')}
-                      </p>
-                    </div>
-                  )}
+                      {/* Enhanced season information */}
+                      {tvDetails.seasons && tvDetails.seasons.find(s => s.season_number === selectedSeason)?.air_date && (
+                        <motion.div
+                          className="mt-8 pt-6 border-t border-indigo-500/30 text-center relative"
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          transition={{ duration: 0.5, delay: 1.7 }}
+                        >
+                          <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                            <div className="w-2 h-2 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full"></div>
+                          </div>
+
+                          <motion.div
+                            whileHover={{ scale: 1.02 }}
+                            className="inline-block bg-gradient-to-r from-[#1a1a2e]/80 to-[#16213e]/80 backdrop-blur-sm px-6 py-3 rounded-xl border border-indigo-400/20"
+                          >
+                            <p className="text-indigo-300 text-sm flex items-center">
+                              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2 text-indigo-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                              </svg>
+                              <span className="font-semibold text-white">Season {selectedSeason}</span>
+                              <span className="mx-2 text-indigo-400">•</span>
+                              <span>Aired on {formatDate(tvDetails.seasons.find(s => s.season_number === selectedSeason)?.air_date || '')}</span>
+                            </p>
+                          </motion.div>
+                        </motion.div>
+                      )}
+                    </motion.div>
+                  </motion.div>
                 </motion.div>
               )}
+
+              {/* Add these CSS animations to your global styles or component */}
+              <style jsx>{`
+  @keyframes float {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-10px) rotate(5deg); }
+  }
+  
+  @keyframes float-delayed {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-15px) rotate(-5deg); }
+  }
+  
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+  
+  .animate-float-delayed {
+    animation: float-delayed 8s ease-in-out infinite;
+    animation-delay: 2s;
+  }
+  
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  
+  .scrollbar-thin::-webkit-scrollbar {
+    height: 6px;
+  }
+  
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background: rgba(99, 102, 241, 0.5);
+    border-radius: 3px;
+  }
+  
+  .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    background: rgba(99, 102, 241, 0.7);
+  }
+`}</style>
             </motion.div>
           )}
         </AnimatePresence>
