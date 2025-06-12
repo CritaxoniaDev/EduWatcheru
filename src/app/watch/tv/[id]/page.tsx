@@ -701,7 +701,7 @@ export default function TVWatchPage() {
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: 0.9 }}
+                  
                   className="mb-8 bg-gradient-to-br from-[#0f0f23]/95 via-[#1a1a2e]/90 to-[#16213e]/95 backdrop-blur-xl p-8 rounded-2xl border border-indigo-400/30 shadow-[0_0_40px_rgba(99,102,241,0.25)] relative overflow-hidden"
                 >
                   {/* Animated background elements */}
@@ -718,7 +718,7 @@ export default function TVWatchPage() {
                     <div className="flex items-center justify-between mb-8">
                       <h3 className="text-2xl font-bold flex items-center bg-gradient-to-r from-indigo-300 via-purple-300 to-pink-300 bg-clip-text text-transparent">
                         <motion.div
-                          whileHover={{ rotate: 360 }}
+                      
                           transition={{ duration: 0.5 }}
                           className="mr-4 p-2 bg-gradient-to-r from-indigo-600/20 to-purple-600/20 rounded-xl backdrop-blur-sm border border-indigo-400/20"
                         >
@@ -733,7 +733,7 @@ export default function TVWatchPage() {
                       <motion.div
                         initial={{ scale: 0 }}
                         animate={{ scale: 1 }}
-                        transition={{ duration: 0.5, delay: 1.3 }}
+                     
                         className="bg-gradient-to-r from-indigo-600/30 to-purple-600/30 backdrop-blur-sm px-4 py-2 rounded-full border border-indigo-400/30"
                       >
                         <span className="text-sm font-medium text-indigo-200">
@@ -746,7 +746,7 @@ export default function TVWatchPage() {
                     <motion.div
                       initial={{ opacity: 0, x: -20 }}
                       animate={{ opacity: 1, x: 0 }}
-                      transition={{ duration: 0.6, delay: 1.2 }}
+                 
                       className="mb-10"
                     >
                       <div className="flex items-center mb-4">
@@ -768,15 +768,11 @@ export default function TVWatchPage() {
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ duration: 0.4, delay: 1.3 + (index * 0.1) }}
-                                whileHover={{
-                                  scale: 1.05,
-                                  y: -2,
-                                  boxShadow: "0 10px 25px rgba(99, 102, 241, 0.3)"
-                                }}
+           
                                 whileTap={{ scale: 0.98 }}
                                 className={`group relative px-6 py-4 rounded-2xl whitespace-nowrap transition-all duration-500 font-semibold min-w-[140px] ${selectedSeason === season.season_number
-                                    ? 'bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-600 text-white shadow-lg shadow-indigo-600/40 border border-indigo-400/50'
-                                    : 'bg-gradient-to-r from-[#2a2a4a]/40 to-[#2a2a4a]/60 text-gray-300 hover:from-[#2a2a4a]/70 hover:to-[#2a2a4a]/90 border border-indigo-500/20 hover:border-indigo-400/40'
+                                  ? 'bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-600 text-white shadow-lg shadow-indigo-600/40 border border-indigo-400/50'
+                                  : 'bg-gradient-to-r from-[#2a2a4a]/40 to-[#2a2a4a]/60 text-gray-300 hover:from-[#2a2a4a]/70 hover:to-[#2a2a4a]/90 border border-indigo-500/20 hover:border-indigo-400/40'
                                   }`}
                               >
                                 {/* Animated background for selected season */}
@@ -796,7 +792,7 @@ export default function TVWatchPage() {
                                         }`}
                                       viewBox="0 0 20 20"
                                       fill="currentColor"
-                                      whileHover={{ rotate: 15 }}
+                              
                                       transition={{ duration: 0.2 }}
                                     >
                                       <path fillRule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zm0 6a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1v-2zm0 6a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1v-2z" clipRule="evenodd" />
@@ -807,10 +803,10 @@ export default function TVWatchPage() {
                                   {season.episode_count > 0 && (
                                     <motion.span
                                       className={`text-xs px-3 py-1 rounded-full font-medium transition-all duration-300 ${selectedSeason === season.season_number
-                                          ? 'bg-white/25 text-indigo-100'
-                                          : 'bg-indigo-600/30 text-indigo-200 group-hover:bg-indigo-600/40'
+                                        ? 'bg-white/25 text-indigo-100'
+                                        : 'bg-indigo-600/30 text-indigo-200 group-hover:bg-indigo-600/40'
                                         }`}
-                                      whileHover={{ scale: 1.1 }}
+                                 
                                     >
                                       {season.episode_count} Episodes
                                     </motion.span>
@@ -843,7 +839,7 @@ export default function TVWatchPage() {
                         {/* Quick navigation */}
                         <div className="flex items-center space-x-2">
                           <motion.button
-                            whileHover={{ scale: 1.1 }}
+
                             whileTap={{ scale: 0.9 }}
                             onClick={() => setSelectedEpisode(1)}
                             className="p-2 bg-gradient-to-r from-purple-600/20 to-indigo-600/20 rounded-lg border border-purple-400/30 hover:border-purple-400/50 transition-all duration-300"
@@ -855,7 +851,7 @@ export default function TVWatchPage() {
                           </motion.button>
 
                           <motion.button
-                            whileHover={{ scale: 1.1 }}
+
                             whileTap={{ scale: 0.9 }}
                             onClick={() => setSelectedEpisode(episodes.length)}
                             className="p-2 bg-gradient-to-r from-indigo-600/20 to-purple-600/20 rounded-lg border border-indigo-400/30 hover:border-indigo-400/50 transition-all duration-300"
@@ -893,17 +889,12 @@ export default function TVWatchPage() {
                               initial={{ opacity: 0, scale: 0.9, y: 20 }}
                               animate={{ opacity: 1, scale: 1, y: 0 }}
                               transition={{ duration: 0.4, delay: index * 0.05 }}
-                              whileHover={{
-                                scale: 1.05,
-                                y: -8,
-                                rotateY: 5,
-                                boxShadow: "0 20px 40px rgba(99, 102, 241, 0.3)"
-                              }}
+
                               whileTap={{ scale: 0.98 }}
                               onClick={() => handleEpisodeChange(episode.episode_number)}
                               className={`group cursor-pointer rounded-2xl overflow-hidden transition-all duration-500 transform-gpu ${selectedEpisode === episode.episode_number
-                                  ? 'ring-2 ring-indigo-400 bg-gradient-to-br from-indigo-900/60 via-purple-900/50 to-indigo-900/60 shadow-lg shadow-indigo-500/30'
-                                  : 'border border-indigo-500/30 bg-gradient-to-br from-[#2a2a4a]/30 to-[#2a2a4a]/50 hover:from-[#2a2a4a]/50 hover:to-[#2a2a4a]/70 hover:border-indigo-400/50'
+                                ? 'ring-2 ring-indigo-400 bg-gradient-to-br from-indigo-900/60 via-purple-900/50 to-indigo-900/60 shadow-lg shadow-indigo-500/30'
+                                : 'border border-indigo-500/30 bg-gradient-to-br from-[#2a2a4a]/30 to-[#2a2a4a]/50 hover:from-[#2a2a4a]/50 hover:to-[#2a2a4a]/70 hover:border-indigo-400/50'
                                 }`}
                             >
                               {/* Episode thumbnail with enhanced effects */}
@@ -939,7 +930,7 @@ export default function TVWatchPage() {
                                 {/* Enhanced episode badge */}
                                 <motion.div
                                   className="absolute top-3 left-3 bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-600 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-lg backdrop-blur-sm border border-white/20"
-                                  whileHover={{ scale: 1.1 }}
+
                                   transition={{ duration: 0.2 }}
                                 >
                                   EP {episode.episode_number}
@@ -960,11 +951,11 @@ export default function TVWatchPage() {
                                 {/* Enhanced play overlay */}
                                 <motion.div
                                   className="absolute inset-0 bg-gradient-to-br from-indigo-900/80 via-purple-900/70 to-indigo-900/80 opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-center justify-center backdrop-blur-sm"
-                                  whileHover={{ backdropFilter: "blur(8px)" }}
+
                                 >
                                   <motion.div
                                     className="bg-white/20 rounded-full p-4 backdrop-blur-md border border-white/30"
-                                    whileHover={{ scale: 1.2, rotate: 90 }}
+
                                     transition={{ duration: 0.3 }}
                                   >
                                     <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 text-white" viewBox="0 0 20 20" fill="currentColor">
@@ -986,7 +977,7 @@ export default function TVWatchPage() {
                                 <motion.h4
                                   className="font-semibold text-base mb-2 text-white group-hover:text-indigo-200 transition-colors duration-300 line-clamp-2"
                                   title={episode.name}
-                                  whileHover={{ x: 2 }}
+
                                   transition={{ duration: 0.2 }}
                                 >
                                   {episode.name}
@@ -997,7 +988,7 @@ export default function TVWatchPage() {
                                   {episode.air_date && (
                                     <motion.div
                                       className="flex items-center text-xs text-indigo-300/80 group-hover:text-indigo-300 transition-colors duration-300"
-                                      whileHover={{ x: 2 }}
+
                                     >
                                       <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -1014,7 +1005,7 @@ export default function TVWatchPage() {
                                   {episode.overview && (
                                     <motion.p
                                       className="text-xs text-gray-400 line-clamp-2 group-hover:text-gray-300 transition-colors duration-300"
-                                      whileHover={{ x: 2 }}
+
                                     >
                                       {episode.overview}
                                     </motion.p>
@@ -1048,11 +1039,11 @@ export default function TVWatchPage() {
                                 <motion.div
                                   className="mt-4 flex items-center justify-between opacity-0 group-hover:opacity-100 transition-all duration-300"
                                   initial={{ y: 10 }}
-                                  whileHover={{ y: 0 }}
+
                                 >
                                   <div className="flex items-center space-x-2">
                                     <motion.button
-                                      whileHover={{ scale: 1.1 }}
+
                                       whileTap={{ scale: 0.9 }}
                                       className="p-1.5 bg-indigo-600/30 hover:bg-indigo-600/50 rounded-lg transition-colors duration-200"
                                       title="Add to watchlist"
@@ -1063,7 +1054,7 @@ export default function TVWatchPage() {
                                     </motion.button>
 
                                     <motion.button
-                                      whileHover={{ scale: 1.1 }}
+
                                       whileTap={{ scale: 0.9 }}
                                       className="p-1.5 bg-purple-600/30 hover:bg-purple-600/50 rounded-lg transition-colors duration-200"
                                       title="Share episode"
@@ -1109,7 +1100,7 @@ export default function TVWatchPage() {
                             <div className="flex items-center justify-center space-x-4">
                               <motion.button
                                 onClick={() => handleSeasonChange(selectedSeason > 1 ? selectedSeason - 1 : 1)}
-                                whileHover={{ scale: 1.05 }}
+
                                 whileTap={{ scale: 0.95 }}
                                 className="px-6 py-3 bg-gradient-to-r from-indigo-600/40 to-purple-600/40 hover:from-indigo-600/60 hover:to-purple-600/60 rounded-xl text-sm font-medium transition-all duration-300 border border-indigo-400/30"
                               >
@@ -1118,7 +1109,7 @@ export default function TVWatchPage() {
 
                               <motion.button
                                 onClick={() => window.location.reload()}
-                                whileHover={{ scale: 1.05 }}
+
                                 whileTap={{ scale: 0.95 }}
                                 className="px-6 py-3 bg-gradient-to-r from-purple-600/40 to-indigo-600/40 hover:from-purple-600/60 hover:to-indigo-600/60 rounded-xl text-sm font-medium transition-all duration-300 border border-purple-400/30"
                               >
@@ -1141,11 +1132,11 @@ export default function TVWatchPage() {
                             <motion.button
                               onClick={() => selectedEpisode > 1 && handleEpisodeChange(selectedEpisode - 1)}
                               disabled={selectedEpisode <= 1}
-                              whileHover={{ scale: selectedEpisode > 1 ? 1.05 : 1 }}
+
                               whileTap={{ scale: selectedEpisode > 1 ? 0.95 : 1 }}
                               className={`flex items-center px-4 py-2 rounded-xl font-medium transition-all duration-300 ${selectedEpisode > 1
-                                  ? 'bg-gradient-to-r from-indigo-600/30 to-purple-600/30 hover:from-indigo-600/50 hover:to-purple-600/50 text-white border border-indigo-400/30'
-                                  : 'bg-gray-600/20 text-gray-500 cursor-not-allowed border border-gray-600/20'
+                                ? 'bg-gradient-to-r from-indigo-600/30 to-purple-600/30 hover:from-indigo-600/50 hover:to-purple-600/50 text-white border border-indigo-400/30'
+                                : 'bg-gray-600/20 text-gray-500 cursor-not-allowed border border-gray-600/20'
                                 }`}
                             >
                               <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -1157,11 +1148,11 @@ export default function TVWatchPage() {
                             <motion.button
                               onClick={() => selectedEpisode < episodes.length && handleEpisodeChange(selectedEpisode + 1)}
                               disabled={selectedEpisode >= episodes.length}
-                              whileHover={{ scale: selectedEpisode < episodes.length ? 1.05 : 1 }}
+
                               whileTap={{ scale: selectedEpisode < episodes.length ? 0.95 : 1 }}
                               className={`flex items-center px-4 py-2 rounded-xl font-medium transition-all duration-300 ${selectedEpisode < episodes.length
-                                  ? 'bg-gradient-to-r from-purple-600/30 to-indigo-600/30 hover:from-purple-600/50 hover:to-indigo-600/50 text-white border border-purple-400/30'
-                                  : 'bg-gray-600/20 text-gray-500 cursor-not-allowed border border-gray-600/20'
+                                ? 'bg-gradient-to-r from-purple-600/30 to-indigo-600/30 hover:from-purple-600/50 hover:to-indigo-600/50 text-white border border-purple-400/30'
+                                : 'bg-gray-600/20 text-gray-500 cursor-not-allowed border border-gray-600/20'
                                 }`}
                             >
                               Next
@@ -1182,7 +1173,6 @@ export default function TVWatchPage() {
 
                             <motion.label
                               className="flex items-center cursor-pointer"
-                              whileHover={{ scale: 1.02 }}
                             >
                               <input
                                 type="checkbox"
@@ -1215,7 +1205,6 @@ export default function TVWatchPage() {
                           </div>
 
                           <motion.div
-                            whileHover={{ scale: 1.02 }}
                             className="inline-block bg-gradient-to-r from-[#1a1a2e]/80 to-[#16213e]/80 backdrop-blur-sm px-6 py-3 rounded-xl border border-indigo-400/20"
                           >
                             <p className="text-indigo-300 text-sm flex items-center">
@@ -1233,52 +1222,6 @@ export default function TVWatchPage() {
                   </motion.div>
                 </motion.div>
               )}
-
-              {/* Add these CSS animations to your global styles or component */}
-              <style jsx>{`
-  @keyframes float {
-    0%, 100% { transform: translateY(0px) rotate(0deg); }
-    50% { transform: translateY(-10px) rotate(5deg); }
-  }
-  
-  @keyframes float-delayed {
-    0%, 100% { transform: translateY(0px) rotate(0deg); }
-    50% { transform: translateY(-15px) rotate(-5deg); }
-  }
-  
-  .animate-float {
-    animation: float 6s ease-in-out infinite;
-  }
-  
-  .animate-float-delayed {
-    animation: float-delayed 8s ease-in-out infinite;
-    animation-delay: 2s;
-  }
-  
-  .line-clamp-2 {
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-  
-  .scrollbar-thin::-webkit-scrollbar {
-    height: 6px;
-  }
-  
-  .scrollbar-thin::-webkit-scrollbar-track {
-    background: transparent;
-  }
-  
-  .scrollbar-thin::-webkit-scrollbar-thumb {
-    background: rgba(99, 102, 241, 0.5);
-    border-radius: 3px;
-  }
-  
-  .scrollbar-thin::-webkit-scrollbar-thumb:hover {
-    background: rgba(99, 102, 241, 0.7);
-  }
-`}</style>
             </motion.div>
           )}
         </AnimatePresence>
